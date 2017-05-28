@@ -26,6 +26,8 @@ const int LIMIAR = 120;
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
 
+int vetor[9];
+
 void ConvertBlackAndWhite()
 {
     unsigned char r,g,b;
@@ -116,29 +118,28 @@ void MontaVetor(int Px, int Py, int Vetor[9])
     int x = Px;
     int y = Py;
 
-    Vetor[0] = Image.GetPointIntensity(x - 1,y-1);
-    Vetor[1] = Image.GetPointIntensity(x - 1,y);
-    Vetor[2] = Image.GetPointIntensity(x - 1,y+1);
-    Vetor[3] = Image.GetPointIntensity(x,y-1);
-    Vetor[4] = Image.GetPointIntensity(x,y);
-    Vetor[5] = Image.GetPointIntensity(x,y+1);
-    Vetor[6] = Image.GetPointIntensity(x + 1,y-1);
-    Vetor[7] = Image.GetPointIntensity(x + 1,y);
-    Vetor[8] = Image.GetPointIntensity(x + 1,y+1);
+    Vetor[0] = Image.GetPointIntensity(x - 1, y-1);
+    Vetor[1] = Image.GetPointIntensity(x - 1, y);
+    Vetor[2] = Image.GetPointIntensity(x - 1, y+1);
+    Vetor[3] = Image.GetPointIntensity(x, y-1);
+    Vetor[4] = Image.GetPointIntensity(x, y);
+    Vetor[5] = Image.GetPointIntensity(x, y+1);
+    Vetor[6] = Image.GetPointIntensity(x + 1, y-1);
+    Vetor[7] = Image.GetPointIntensity(x + 1, y);
+    Vetor[8] = Image.GetPointIntensity(x + 1, y+1);
+
+    OrdenaVetor(Vetor);
 }
 
 void Mediana()
 {
-    int Vetor[9];
-    int x, y;
-    int i;
-    for(x = 0; x < Image.SizeX(); x++)
-    {
-        for(y = 0; y < Image.SizeY(); y++)
-        {
-            MontaVetor(x,y, Vetor); // Coloca em VETOR os valores das intensidades ao redor do ponto x,y.
-            OrdenaVetor(Vetor);
-            NewImage.DrawPixel(x, y, Vetor[0], Vetor[0], Vetor[0]);
+    int x;
+    int y;
+    for(x = 1; x < Image.SizeX() - 1; x++){
+        for(y = 1; y < Image.SizeY() - 1; y++){
+            MontaVetor(x, y, vetor);
+            OrdenaVetor(vetor);
+            NewImage.DrawPixel(x, y, vetor[0], vetor[0], vetor[0]);
         }
     }
 }
