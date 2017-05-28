@@ -1,12 +1,3 @@
-// **********************************************************************
-// PUCRS/FACIN
-// Programa de testes para manipulação de Imagens
-//
-// Marcio Sarroglia Pinho
-//
-// pinho@pucrs.br
-// **********************************************************************
-
 #include <iostream>
 #include <cmath>
 
@@ -34,9 +25,7 @@ ImageClass Image, NewImage;
 const int LIMIAR = 120;
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
-// **********************************************************************
-//  void ConvertBlackAndWhite()
-// **********************************************************************
+
 void ConvertBlackAndWhite()
 {
     unsigned char r,g,b;
@@ -51,19 +40,33 @@ void ConvertBlackAndWhite()
             Image.ReadPixel(x,y,r,g,b);
 
             if (i < LIMIAR)
-            {
                 NewImage.DrawPixel(x, y,0,0,0);  // exibe um ponto PRETO na imagem
-            }
-            else NewImage.DrawPixel(x, y, 255,255,255); // exibe um ponto VERMELHO na imagem
+            else
+                NewImage.DrawPixel(x, y, 255,255,255); // exibe um ponto VERMELHO na imagem
 
         }
     }
     cout << "Concluiu Black & White." << endl;
 }
 
-// **********************************************************************
-// void DetectImageBorders()
-// **********************************************************************
+void detectarPinos() {
+    unsigned char r, g, b;
+    int x, y;
+    int i;
+    for(x = 0; x < Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            i = Image.GetPointIntensity(x,y); /** VERIFICA O TOM DE CINZA DA IMAGEM **/
+            Image.ReadPixel(x, y, r, g, b);
+            if (i > LIMIAR)
+                NewImage.DrawPixel(x, y, 0, 0, 255);  /** exibe um ponto PRETO na imagem **/
+            else
+                NewImage.DrawPixel(x, y,0,0,0);  // exibe um ponto PRETO na imagem
+        }
+    }
+}
+
 void DetectImageBorders()
 {
     cout << "Iniciou DetectImageBorders...." << endl;
@@ -72,28 +75,22 @@ void DetectImageBorders()
 
 }
 
-// **********************************************************************
-// void ConvertToGrayscale()
-// **********************************************************************
 void ConvertToGrayscale()
 {
     cout << "Iniciou ConvertToGrayscale..." << endl;
-    int x,y;
+    int x, y;
     int i;
-    for(x=0; x<Image.SizeX(); x++)
+    for(x = 0; x < Image.SizeX(); x++)
     {
-        for(y=0; y<Image.SizeY(); y++)
+        for(y = 0; y < Image.SizeY(); y++)
         {
-            i = Image.GetPointIntensity(x,y); // Le o TOM DE CINZA DA IMAGEM
-            NewImage.DrawPixel(x, y,i,i,i);  // exibe um ponto CINZA na imagem da direita
+            i = Image.GetPointIntensity(x, y); // Le o TOM DE CINZA DA IMAGEM
+            NewImage.DrawPixel(x, y, i, i, i);  // exibe um ponto CINZA na imagem da direita
         }
     }
     cout << "Concluiu ConvertToGrayscale." << endl;
 }
 
-// **********************************************************************
-// void InvertImage()
-// **********************************************************************
 void InvertImage()
 {
     cout << "Iniciou InvertImage..." << endl;
@@ -116,31 +113,43 @@ void OrdenaVetor(int window[])
 }
 void MontaVetor(int Px, int Py, int Vetor[9])
 {
+    int x = Px;
+    int y = Py;
 
+    Vetor[0] = Image.GetPointIntensity(x - 1,y-1);
+    Vetor[1] = Image.GetPointIntensity(x - 1,y);
+    Vetor[2] = Image.GetPointIntensity(x - 1,y+1);
+    Vetor[3] = Image.GetPointIntensity(x,y-1);
+    Vetor[4] = Image.GetPointIntensity(x,y);
+    Vetor[5] = Image.GetPointIntensity(x,y+1);
+    Vetor[6] = Image.GetPointIntensity(x + 1,y-1);
+    Vetor[7] = Image.GetPointIntensity(x + 1,y);
+    Vetor[8] = Image.GetPointIntensity(x + 1,y+1);
 }
-// **********************************************************************
-// void Mediana()
-// **********************************************************************
+
 void Mediana()
 {
-    cout << "Iniciou Mediana..." << endl;
-
-    cout << "Concluiu Mediana." << endl;
-
+    int Vetor[9];
+    int x, y;
+    int i;
+    for(x = 0; x < Image.SizeX(); x++)
+    {
+        for(y = 0; y < Image.SizeY(); y++)
+        {
+            MontaVetor(x,y, Vetor); // Coloca em VETOR os valores das intensidades ao redor do ponto x,y.
+            OrdenaVetor(Vetor);
+            NewImage.DrawPixel(x, y, Vetor[0], Vetor[0], Vetor[0]);
+        }
+    }
 }
-// **********************************************************************
-//  void init(void)
-// **********************************************************************
+
 void init()
 {
     int r;
-    // Carrega a uma image
-    string nome = "Falcao.jpg";
-//    string nome = "Ruido2.bmp";
+    /** Carrega a uma image **/
+    string nome = "imagens/originais/6.png";
 
     string path = "";
-// No Code::Blocks para MacOS eh necessario usar um path absoluto
-// string path = "ArquivosCodeBlocks/Imagens/";
 
     nome =  path + nome;
     cout << "imagem a ser carregada: *" << nome << "*" << endl;
@@ -150,18 +159,11 @@ void init()
     if (!r) exit(1); // Erro na carga da imagem
     else cout << ("Imagem carregada!\n");
 
-    // Ajusta o tamnho da imagem da direita, para que ela
-    // passe a ter o mesmo tamnho da imagem recem carregada
-    // Caso precise alterar o tamanho da nova imagem, mude os parâmetros
-    // da na chamada abaixo
     NewImage.SetSize(Image.SizeX(), Image.SizeY(), Image.Channels());
     cout << "Nova Imagem Criada" << endl;
 
 }
-// **********************************************************************
-//  void reshape( int w, int h )
-//  trata o redimensionamento da janela OpenGL
-// **********************************************************************
+
 void reshape( int w, int h )
 {
 
@@ -177,9 +179,7 @@ void reshape( int w, int h )
     glLoadIdentity();
 
 }
-// **********************************************************************
-//  void display( void )
-// **********************************************************************
+
 void display( void )
 {
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Fundo de tela preto
@@ -209,9 +209,7 @@ void display( void )
 // Mostra a tela OpenGL
     glutSwapBuffers();
 }
-// **********************************************************************
-//  void keyboard ( unsigned char key, int x, int y )
-// **********************************************************************
+
 void keyboard ( unsigned char key, int x, int y )
 {
 
@@ -222,39 +220,41 @@ void keyboard ( unsigned char key, int x, int y )
         Image.Delete();
         exit ( 0 );   // a tecla ESC for pressionada
         break;
+
+    /** converter para preto e branco **/
     case '2':
         ConvertBlackAndWhite();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
 
+    /** detectar pinos **/
+    case 'p':
+        detectarPinos();
+        glutPostRedisplay();
+        break;
     case 'g':
         ConvertToGrayscale();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
-
     case 'b':
         DetectImageBorders();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
     case 'i':
         InvertImage();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
+
+     /** realizar mediana **/
      case 'm':
         Mediana();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
-
-
-
     default:
         break;
     }
 }
 
-// **********************************************************************
-//  void arrow_keys ( int a_keys, int x, int y )
-// **********************************************************************
 void arrow_keys ( int a_keys, int x, int y )
 {
     switch ( a_keys )
@@ -268,10 +268,6 @@ void arrow_keys ( int a_keys, int x, int y )
         break;
     }
 }
-
-// **********************************************************************
-//  void main ( int argc, char** argv )
-// **********************************************************************
 
 int main ( int argc, char** argv )
 {
@@ -295,5 +291,3 @@ int main ( int argc, char** argv )
     glutMainLoop ( );
     return 0;
 }
-
-
