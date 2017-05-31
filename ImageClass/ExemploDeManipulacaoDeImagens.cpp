@@ -157,7 +157,7 @@ void Mediana()
     int y;
     for(x = 1; x < Image.SizeX() - 1; x++){
         for(y = 1; y < Image.SizeY() - 1; y++){
-            MontaVetor(x,y, meuVetor);
+            MontaVetor(x, y, meuVetor);
             OrdenaVetor(meuVetor);
             NewImage.DrawPixel(x, y, meuVetor[4], meuVetor[4], meuVetor[4]);
         }
@@ -200,10 +200,34 @@ int DetectarPinos() {
             i = Image.GetPointIntensity(x,y);
             Image.ReadPixel(x,y,r,g,b);
 
-            if (i > PINOS)
+            if (i > LIMIAR)
             {
                 /** realizando a pintura nos pinos de azul **/
                 NewImage.DrawPixel(x, y, 255, 255, 255);
+            }
+            else NewImage.DrawPixel(x, y, 0,0,0);
+
+        }
+    }
+    cout << "-- pinos detectados" << endl;
+}
+
+int DetectarDentina() {
+    unsigned char r,g,b;
+    int x,y;
+    int i;
+    cout << "-- detectarPinos...." << endl;
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            i = Image.GetPointIntensity(x,y);
+            Image.ReadPixel(x,y,r,g,b);
+
+            if (i > 60 && i < 90)
+            {
+                /** realizando a pintura nos pinos de azul **/
+                NewImage.DrawPixel(x, y, 0, 255, 0);
             }
             else NewImage.DrawPixel(x, y, 0,0,0);
 
@@ -265,33 +289,21 @@ void preenche()
 void init()
 {
     int r;
-    // Carrega a uma image
     string nome = "imagens/originais/1.png";
-//    string nome = "Ruido2.bmp";
-
     string path = "";
-// No Code::Blocks para MacOS eh necessario usar um path absoluto
-// string path = "ArquivosCodeBlocks/Imagens/";
-
     nome =  path + nome;
     cout << "imagem a ser carregada: *" << nome << "*" << endl;
     r = Image.Load(nome.c_str()); // Carrega uma imagem
 
-
     if (!r) exit(1); // Erro na carga da imagem
     else cout << ("Imagem carregada!\n");
 
-    // Ajusta o tamnho da imagem da direita, para que ela
-    // passe a ter o mesmo tamnho da imagem recem carregada
-    // Caso precise alterar o tamanho da nova imagem, mude os parâmetros
-    // da na chamada abaixo
     NewImage.SetSize(Image.SizeX(), Image.SizeY(), Image.Channels());
     cout << "Nova Imagem Criada" << endl;
 }
 
 void reshape( int w, int h )
 {
-
     // Reset the coordinate system before modifying
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -353,14 +365,22 @@ void keyboard ( unsigned char key, int x, int y )
         ConvertToGrayscale();
         glutPostRedisplay();
         break;
+    /** histograma **/
     case 'h':
         Histograma();
         glutPostRedisplay();
         break;
-    case 'd':
+    /** pinos **/
+    case 'p':
         DetectarPinos();
         glutPostRedisplay();
         break;
+    /** dentina **/
+    case 'd':
+        DetectarDentina();
+        glutPostRedisplay();
+        break;
+    /** bordas **/
     case 'b':
         DetectImageBorders();
         glutPostRedisplay();
