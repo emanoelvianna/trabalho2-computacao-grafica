@@ -26,15 +26,14 @@ ImageClass Image, NewImage;
 
 const int LIMIAR = 120;
 const int TEETH = 59;
+const int PINOS = 120;
 int branco = 0;
 int preto = 0;
 
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
 #define TAMANHO 9
-// **********************************************************************
-//  void ConvertBlackAndWhite()
-// **********************************************************************
+
 void ConvertBlackAndWhite()
 {
     unsigned char r,g,b;
@@ -86,20 +85,12 @@ void findTeeth()
 
 }
 
-// **********************************************************************
-// void DetectImageBorders()
-// **********************************************************************
 void DetectImageBorders()
 {
     cout << "Iniciou DetectImageBorders...." << endl;
-
     cout << "Concluiu DetectImageBorders." << endl;
-
 }
 
-// **********************************************************************
-// void ConvertToGrayscale()
-// **********************************************************************
 void ConvertToGrayscale()
 {
     cout << "Iniciou ConvertToGrayscale..." << endl;
@@ -116,9 +107,6 @@ void ConvertToGrayscale()
     cout << "Concluiu ConvertToGrayscale." << endl;
 }
 
-// **********************************************************************
-// void InvertImage()
-// **********************************************************************
 void InvertImage()
 {
     cout << "Iniciou InvertImage..." << endl;
@@ -145,6 +133,7 @@ void OrdenaVetor(int window[])
         window[j+1] = temp;
     }
 }
+
 void MontaVetor(int Px, int Py, int Vetor[9])
 {
     int x = Px;
@@ -160,35 +149,80 @@ void MontaVetor(int Px, int Py, int Vetor[9])
     Vetor[7] = NewImage.GetPointIntensity(x + 1,y);
     Vetor[8] = NewImage.GetPointIntensity(x + 1,y+1);
 }
-// **********************************************************************
-// void Mediana()
-// **********************************************************************
+
 void Mediana()
 {
-    cout << "Iniciou Mediana..." << endl;
+    cout << "-- iniciou mediana..." << endl;
     int x;
     int y;
-
     for(x = 1; x < Image.SizeX() - 1; x++){
         for(y = 1; y < Image.SizeY() - 1; y++){
-            MontaVetor(x,y,meuVetor);
+            MontaVetor(x,y, meuVetor);
             OrdenaVetor(meuVetor);
-            NewImage.DrawPixel(x, y,meuVetor[4],meuVetor[4],meuVetor[4]);
+            NewImage.DrawPixel(x, y, meuVetor[4], meuVetor[4], meuVetor[4]);
         }
     }
-    cout << "Concluiu Mediana." << endl;
+    cout << "-- concluiu mediana." << endl;
+}
+
+void Histograma() {
+    int x, y, i = 0;
+    int frequencia[256];
+
+    /** preenche o vetor auxiliar **/
+    for(i = 0; i < 256; i++) {
+        frequencia[i] = 0;
+    }
+
+    /** calculando os valores de frequencia de cada cor **/
+    for(x = 0; x < Image.SizeX(); x++){
+        for(y = 0; y < Image.SizeY(); y++){
+            int cor = Image.GetPointIntensity(x,y);
+            frequencia[cor]++;
+        }
+    }
+
+    /** imprimindo os valores de frequencia de cada cor **/
+    for(i = 0; i < 256; i++) {
+        cout << i << "=" << frequencia[i] << endl;
+    }
+}
+
+int DetectarPinos() {
+    unsigned char r,g,b;
+    int x,y;
+    int i;
+    cout << "-- detectarPinos...." << endl;
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            i = Image.GetPointIntensity(x,y);
+            Image.ReadPixel(x,y,r,g,b);
+
+            if (i > PINOS)
+            {
+                /** realizando a pintura nos pinos de azul **/
+                NewImage.DrawPixel(x, y, 255, 255, 255);
+            }
+            else NewImage.DrawPixel(x, y, 0,0,0);
+
+        }
+    }
+    cout << "-- pinos detectados" << endl;
 }
 
 void efetuaPreenchimento(int x, int y, int vetor[9])
 {
     int i;
-    for(i = 0; i < 9; i++)
-    {
-        if(vetor[i] == 255){branco++;}
-        else{preto++;}
+    for(i = 0; i < 9; i++) {
+        if(vetor[i] == 255) {
+            branco++;
+        } else {
+            preto++;
+        }
     }
-    if(branco > preto)
-    {
+    if(branco > preto) {
         NewImage.DrawPixel(x - 1,y-1, 255,255,255);
         NewImage.DrawPixel(x - 1,y, 255,255,255);
         NewImage.DrawPixel(x - 1,y+1, 255,255,255);
@@ -198,7 +232,6 @@ void efetuaPreenchimento(int x, int y, int vetor[9])
         NewImage.DrawPixel(x + 1,y-1, 255,255,255);
         NewImage.DrawPixel(x + 1,y, 255,255,255);
         NewImage.DrawPixel(x + 1,y+1, 255,255,255);
-
     } else {
         NewImage.DrawPixel(x - 1,y-1,0,0,0);
         NewImage.DrawPixel(x - 1,y,0,0,0);
@@ -210,25 +243,6 @@ void efetuaPreenchimento(int x, int y, int vetor[9])
         NewImage.DrawPixel(x + 1,y,0,0,0);
         NewImage.DrawPixel(x + 1,y+1,0,0,0);
 
-    }
-}
-
-void his() {
-    int x, y = 0;
-    int v[256];
-    for(int i = 0; i < 256; i++) {
-        v[i] = 0;
-    }
-
-    for(x = 0; x < Image.SizeX(); x++){
-        for(y = 0; y < Image.SizeY(); y++){
-            int aux = Image.GetPointIntensity(x,y);
-            v[aux]++;
-        }
-    }
-
-    for(int i = 0; i < 256; i++) {
-        cout << i << "=" << v[i] << endl;
     }
 }
 
@@ -248,9 +262,6 @@ void preenche()
     cout << "Concluiu Preenche." << endl;
 }
 
-// **********************************************************************
-//  void init(void)
-// **********************************************************************
 void init()
 {
     int r;
@@ -276,12 +287,8 @@ void init()
     // da na chamada abaixo
     NewImage.SetSize(Image.SizeX(), Image.SizeY(), Image.Channels());
     cout << "Nova Imagem Criada" << endl;
-    his();
 }
-// **********************************************************************
-//  void reshape( int w, int h )
-//  trata o redimensionamento da janela OpenGL
-// **********************************************************************
+
 void reshape( int w, int h )
 {
 
@@ -297,9 +304,7 @@ void reshape( int w, int h )
     glLoadIdentity();
 
 }
-// **********************************************************************
-//  void display( void )
-// **********************************************************************
+
 void display( void )
 {
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Fundo de tela preto
@@ -329,40 +334,44 @@ void display( void )
 // Mostra a tela OpenGL
     glutSwapBuffers();
 }
-// **********************************************************************
-//  void keyboard ( unsigned char key, int x, int y )
-// **********************************************************************
+
 void keyboard ( unsigned char key, int x, int y )
 {
 
     switch ( key )
     {
-    case 27: // Termina o programa qdo
+    case 27: /** Termina o programa qdo **/
         NewImage.Delete();
         Image.Delete();
-        exit ( 0 );   // a tecla ESC for pressionada
+        exit ( 0 );
         break;
     case '2':
         ConvertBlackAndWhite();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
-
     case 'g':
         ConvertToGrayscale();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
-
+    case 'h':
+        Histograma();
+        glutPostRedisplay();
+        break;
+    case 'd':
+        DetectarPinos();
+        glutPostRedisplay();
+        break;
     case 'b':
         DetectImageBorders();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
     case 'i':
         InvertImage();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
      case 'm':
         Mediana();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
 
      case 't':
@@ -371,33 +380,25 @@ void keyboard ( unsigned char key, int x, int y )
         preenche();
         preenche();
 
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
     default:
         break;
     }
 }
 
-// **********************************************************************
-//  void arrow_keys ( int a_keys, int x, int y )
-// **********************************************************************
 void arrow_keys ( int a_keys, int x, int y )
 {
     switch ( a_keys )
     {
-    case GLUT_KEY_UP:       // When Up Arrow Is Pressed...
+    case GLUT_KEY_UP:
         break;
-    case GLUT_KEY_DOWN:     // When Down Arrow Is Pressed...
-
+    case GLUT_KEY_DOWN:
         break;
     default:
         break;
     }
 }
-
-// **********************************************************************
-//  void main ( int argc, char** argv )
-// **********************************************************************
 
 int main ( int argc, char** argv )
 {
@@ -406,7 +407,6 @@ int main ( int argc, char** argv )
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB );
     glutInitWindowPosition (10,10);
 
-    // Define o tamanho da janela gráfica do programa
     glutInitWindowSize  ( LARGURA_JAN, ALTURA_JAN);
     glutCreateWindow    ( "Image Loader" );
 
