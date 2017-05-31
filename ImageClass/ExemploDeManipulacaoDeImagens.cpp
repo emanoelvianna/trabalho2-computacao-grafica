@@ -224,12 +224,12 @@ int DetectarDentina() {
             i = Image.GetPointIntensity(x,y);
             Image.ReadPixel(x,y,r,g,b);
 
-            if (i > 60 && i < 90)
+            if (i > 50 && i < 100)
             {
                 /** realizando a pintura nos pinos de azul **/
                 NewImage.DrawPixel(x, y, 0, 255, 0);
             }
-            else NewImage.DrawPixel(x, y, 0,0,0);
+            //else NewImage.DrawPixel(x, y, 0,0,0);
 
         }
     }
