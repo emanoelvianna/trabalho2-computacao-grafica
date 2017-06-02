@@ -203,9 +203,9 @@ int DetectarPinos() {
             if (i > LIMIAR)
             {
                 /** realizando a pintura nos pinos de azul **/
-                NewImage.DrawPixel(x, y, 255, 255, 255);
+                NewImage.DrawPixel(x, y, 0, 0, 255);
             }
-            else NewImage.DrawPixel(x, y, 0,0,0);
+            //else NewImage.DrawPixel(x, y, 0,0,0);
 
         }
     }
