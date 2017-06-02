@@ -68,15 +68,15 @@ void armazena_imagem_em_matriz_auxiliar()
     {
         for(y=1; y<Image.SizeY()-1; y++)
         {
-			NewImage.ReadPixel(x,y,r,g,b);
+            NewImage.ReadPixel(x,y,r,g,b);
 
-			r_matrix_aux[x][y] = r;
+            r_matrix_aux[x][y] = r;
             g_matrix_aux[x][y] = g;
-			b_matrix_aux[x][y] = b;
+            b_matrix_aux[x][y] = b;
         }
     }
 
-	printf("MATRIZ SALVA!\n");
+    printf("MATRIZ SALVA!\n");
 }
 
 /**
@@ -91,15 +91,15 @@ void carrega_imagem_de_matriz_auxiliar()
     {
         for(y=1; y<Image.SizeY()-1; y++)
         {
-			r = r_matrix_aux[x][y];
+            r = r_matrix_aux[x][y];
             g = g_matrix_aux[x][y];
-			b = b_matrix_aux[x][y];
+            b = b_matrix_aux[x][y];
 
-			NewImage.DrawPixel(x,y,r,g,b);
+            NewImage.DrawPixel(x,y,r,g,b);
         }
     }
 
-		printf("MATRIZ CARREGADA!\n");
+    printf("MATRIZ CARREGADA!\n");
 }
 
 /**
@@ -107,22 +107,22 @@ void carrega_imagem_de_matriz_auxiliar()
  */
 void inicializa_imagem_de_trabalho()
 {
-	cout << "Inicializando imagem..." << endl;
+    cout << "Inicializando imagem..." << endl;
 
-	unsigned char r,g,b;
+    unsigned char r,g,b;
     int x,y;
 
     for(x=1; x<Image.SizeX()-1; x++)
     {
         for(y=1; y<Image.SizeY()-1; y++)
         {
-			Image.ReadPixel(x,y,r,g,b);
+            Image.ReadPixel(x,y,r,g,b);
 
-			NewImage.DrawPixel(x,y,r,g,b);
+            NewImage.DrawPixel(x,y,r,g,b);
         }
     }
 
-	cout << "Imagem Inicializada" << endl;
+    cout << "Imagem Inicializada" << endl;
 }
 
 /**
@@ -135,23 +135,23 @@ void inicializa_imagem_de_trabalho()
  */
 int mediana_simples_aux(int x, int y)
 {
-	int vetor[9];
+    int vetor[9];
 
-	vetor[0] = NewImage.GetPointIntensity(x-1,y-1);
-	vetor[1] = NewImage.GetPointIntensity(x,y-1);
-	vetor[2] = NewImage.GetPointIntensity(x+1,y-1);
+    vetor[0] = NewImage.GetPointIntensity(x-1,y-1);
+    vetor[1] = NewImage.GetPointIntensity(x,y-1);
+    vetor[2] = NewImage.GetPointIntensity(x+1,y-1);
 
-	vetor[3] = NewImage.GetPointIntensity(x-1,y);
-	vetor[4] = NewImage.GetPointIntensity(x,y);
-	vetor[5] = NewImage.GetPointIntensity(x+1,y);
+    vetor[3] = NewImage.GetPointIntensity(x-1,y);
+    vetor[4] = NewImage.GetPointIntensity(x,y);
+    vetor[5] = NewImage.GetPointIntensity(x+1,y);
 
-	vetor[6] = NewImage.GetPointIntensity(x-1,y+1);
-	vetor[7] = NewImage.GetPointIntensity(x,y+1);
-	vetor[8] = NewImage.GetPointIntensity(x+1,y+1);
+    vetor[6] = NewImage.GetPointIntensity(x-1,y+1);
+    vetor[7] = NewImage.GetPointIntensity(x,y+1);
+    vetor[8] = NewImage.GetPointIntensity(x+1,y+1);
 
-	ordena_vetor(vetor);
+    ordena_vetor(vetor);
 
-	return vetor[4];
+    return vetor[4];
 }
 
 /**
@@ -166,9 +166,9 @@ void mediana_simples()
     {
         for(y=1; y<Image.SizeY()-1; y++)
         {
-			int valor = mediana_simples_aux(x, y);
+            int valor = mediana_simples_aux(x, y);
 
-			NewImage.DrawPixel(x, y,valor,valor,valor);
+            NewImage.DrawPixel(x, y,valor,valor,valor);
         }
     }
 
@@ -185,23 +185,23 @@ void mediana_simples()
  */
 int mediana_bloco_aux(int x, int y)
 {
-	int vetor[9];
+    int vetor[9];
 
-	vetor[0] = NewImage.GetPointIntensity(x-1,y-1);
-	vetor[1] = NewImage.GetPointIntensity(x,y-1);
-	vetor[2] = NewImage.GetPointIntensity(x+1,y-1);
+    vetor[0] = NewImage.GetPointIntensity(x-1,y-1);
+    vetor[1] = NewImage.GetPointIntensity(x,y-1);
+    vetor[2] = NewImage.GetPointIntensity(x+1,y-1);
 
-	vetor[3] = NewImage.GetPointIntensity(x-1,y);
-	vetor[4] = NewImage.GetPointIntensity(x,y);
-	vetor[5] = NewImage.GetPointIntensity(x+1,y);
+    vetor[3] = NewImage.GetPointIntensity(x-1,y);
+    vetor[4] = NewImage.GetPointIntensity(x,y);
+    vetor[5] = NewImage.GetPointIntensity(x+1,y);
 
-	vetor[6] = NewImage.GetPointIntensity(x-1,y+1);
-	vetor[7] = NewImage.GetPointIntensity(x,y+1);
-	vetor[8] = NewImage.GetPointIntensity(x+1,y+1);
+    vetor[6] = NewImage.GetPointIntensity(x-1,y+1);
+    vetor[7] = NewImage.GetPointIntensity(x,y+1);
+    vetor[8] = NewImage.GetPointIntensity(x+1,y+1);
 
-	ordena_vetor(vetor);
+    ordena_vetor(vetor);
 
-	return vetor[4];
+    return vetor[4];
 }
 
 /**
@@ -216,19 +216,19 @@ void mediana_bloco()
     {
         for(y=1; y<Image.SizeY()-1; y += 3)
         {
-			int valor = mediana_simples_aux(x, y);
+            int valor = mediana_simples_aux(x, y);
 
-			NewImage.DrawPixel(x-1,y-1,valor,valor,valor);
-			NewImage.DrawPixel(x,y-1,valor,valor,valor);
-			NewImage.DrawPixel(x+1,y-1,valor,valor,valor);
+            NewImage.DrawPixel(x-1,y-1,valor,valor,valor);
+            NewImage.DrawPixel(x,y-1,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y-1,valor,valor,valor);
 
-			NewImage.DrawPixel(x-1,y,valor,valor,valor);
-			NewImage.DrawPixel(x,y,valor,valor,valor);
-			NewImage.DrawPixel(x+1,y,valor,valor,valor);
+            NewImage.DrawPixel(x-1,y,valor,valor,valor);
+            NewImage.DrawPixel(x,y,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y,valor,valor,valor);
 
-			NewImage.DrawPixel(x-1,y+1,valor,valor,valor);
-			NewImage.DrawPixel(x,y+1,valor,valor,valor);
-			NewImage.DrawPixel(x+1,y+1,valor,valor,valor);
+            NewImage.DrawPixel(x-1,y+1,valor,valor,valor);
+            NewImage.DrawPixel(x,y+1,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y+1,valor,valor,valor);
         }
     }
 
@@ -245,30 +245,30 @@ void mediana_bloco()
  */
 int media_simples_aux(int x, int y)
 {
-	int acumula = 0;
+    int acumula = 0;
 
-	int vetor[9];
+    int vetor[9];
 
-	vetor[0] = NewImage.GetPointIntensity(x-1,y-1);
-	vetor[1] = NewImage.GetPointIntensity(x,y-1);
-	vetor[2] = NewImage.GetPointIntensity(x+1,y-1);
+    vetor[0] = NewImage.GetPointIntensity(x-1,y-1);
+    vetor[1] = NewImage.GetPointIntensity(x,y-1);
+    vetor[2] = NewImage.GetPointIntensity(x+1,y-1);
 
-	vetor[3] = NewImage.GetPointIntensity(x-1,y);
-	vetor[4] = NewImage.GetPointIntensity(x,y);
-	vetor[5] = NewImage.GetPointIntensity(x+1,y);
+    vetor[3] = NewImage.GetPointIntensity(x-1,y);
+    vetor[4] = NewImage.GetPointIntensity(x,y);
+    vetor[5] = NewImage.GetPointIntensity(x+1,y);
 
-	vetor[6] = NewImage.GetPointIntensity(x-1,y+1);
-	vetor[7] = NewImage.GetPointIntensity(x,y+1);
-	vetor[8] = NewImage.GetPointIntensity(x+1,y+1);
+    vetor[6] = NewImage.GetPointIntensity(x-1,y+1);
+    vetor[7] = NewImage.GetPointIntensity(x,y+1);
+    vetor[8] = NewImage.GetPointIntensity(x+1,y+1);
 
-	for(int i = 0; i < 9; i++)
-	{
-		acumula = acumula + vetor[i];
-	}
+    for(int i = 0; i < 9; i++)
+    {
+        acumula = acumula + vetor[i];
+    }
 
-	ordena_vetor(vetor);
+    ordena_vetor(vetor);
 
-	return (int) acumula / 9;
+    return (int) acumula / 9;
 }
 
 /**
@@ -283,9 +283,9 @@ void media_simples()
     {
         for(y=1; y<Image.SizeY()-1; y++)
         {
-			int valor = media_simples_aux(x, y);
+            int valor = media_simples_aux(x, y);
 
-			NewImage.DrawPixel(x, y,valor,valor,valor);
+            NewImage.DrawPixel(x, y,valor,valor,valor);
         }
     }
 
@@ -297,7 +297,7 @@ void media_simples()
  */
 void calcula_limiar()
 {
-	cout << "Iniciou Limiar...";
+    cout << "Iniciou Limiar...";
 
     unsigned char r,g,b;
     int x,y;
@@ -312,14 +312,14 @@ void calcula_limiar()
 
             if (i >= limiar_inferior && i < limiar_superior)
             {
-				//pinta o pixel de preto
+                //pinta o pixel de preto
                 NewImage.DrawPixel(x, y,0,0,0);
             }
             else
-			{
-				//pinta o pixel de branco
-				NewImage.DrawPixel(x, y, 255,255,255);
-			}
+            {
+                //pinta o pixel de branco
+                NewImage.DrawPixel(x, y, 255,255,255);
+            }
         }
     }
 
@@ -331,7 +331,7 @@ void calcula_limiar()
  */
 void calcular_histograma()
 {
-	cout << "Iniciou Histograma...";
+    cout << "Iniciou Histograma...";
 
     unsigned char r,g,b;
     int x,y;
@@ -355,7 +355,7 @@ void calcular_histograma()
     }
     printf("total da soma = %d\n\n",soma);
 
-	cout << "Concluiu Histograma.";
+    cout << "Concluiu Histograma.";
 }
 
 /**
@@ -392,28 +392,28 @@ void init()
 
     NewImage.SetSize(Image.SizeX(), Image.SizeY(), Image.Channels());
 
-	//limiares iniciais
-	limiar_inferior = 0;
-	limiar_superior = 70;
+    //limiares iniciais
+    limiar_inferior = 0;
+    limiar_superior = 70;
 
-	//inicializa histograma
-	for(i = 0; i < 255; i++)
+    //inicializa histograma
+    for(i = 0; i < 255; i++)
     {
         histograma[i] = 0;
     }
 
-	//aloca matrizes auxiliares que armazenam pixeis
-	r_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    //aloca matrizes auxiliares que armazenam pixeis
+    r_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
     for (i = 0; i < Image.SizeX(); i++)
     {
         r_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
     }
-	g_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    g_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
     for (i = 0; i < Image.SizeX(); i++)
     {
         g_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
     }
-	b_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    b_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
     for (i = 0; i < Image.SizeX(); i++)
     {
         b_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
@@ -480,38 +480,38 @@ void keyboard ( unsigned char key, int x, int y )
 
     switch ( key )
     {
-	//encerra o programa
+    //encerra o programa
     case 27:
         NewImage.Delete();
         Image.Delete();
         exit(0);
         break;
-	//inicializa imagem de trabalho
+    //inicializa imagem de trabalho
     case '0':
         inicializa_imagem_de_trabalho();
         glutPostRedisplay();
         break;
-	//calcula mediana simples
+    //calcula mediana simples
     case '1':
         mediana_simples();
         glutPostRedisplay();
         break;
-	//calcula mediana de bloco
-	case '2':
+    //calcula mediana de bloco
+    case '2':
         mediana_bloco();
         glutPostRedisplay();
         break;
-	//calcula média simples
+    //calcula média simples
     case '3':
         media_simples();
         glutPostRedisplay();
         break;
-	//calcula média de bloco
+    //calcula média de bloco
     case '4':
         //ToDo
         glutPostRedisplay();
         break;
-	//calcula histograma
+    //calcula histograma
     case '5':
         calcular_histograma();
         glutPostRedisplay();
@@ -526,35 +526,35 @@ void keyboard ( unsigned char key, int x, int y )
         calcula_limiar();
         glutPostRedisplay();
         break;
-	//salva imagem em matriz
+    //salva imagem em matriz
     case '8':
         armazena_imagem_em_matriz_auxiliar();
         glutPostRedisplay();
         break;
-	//carrega imagem de matriz
+    //carrega imagem de matriz
     case '9':
         carrega_imagem_de_matriz_auxiliar();
         glutPostRedisplay();
         break;
-	//decrementa limiar inferior
+    //decrementa limiar inferior
     case 'q':
         limiar_inferior = limiar_inferior - 10;
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
         glutPostRedisplay();
         break;
-	//incrementa limiar inferior
+    //incrementa limiar inferior
     case 'w':
         limiar_inferior = limiar_inferior + 10;
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
         glutPostRedisplay();
         break;
-	//decrementa limiar superior
+    //decrementa limiar superior
     case 'e':
         limiar_superior = limiar_superior - 10;
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
         glutPostRedisplay();    // obrigatório para redesenhar a tela
         break;
-	//incrementa limiar superior
+    //incrementa limiar superior
     case 'r':
         limiar_superior = limiar_superior + 10;
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
