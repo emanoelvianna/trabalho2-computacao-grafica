@@ -52,6 +52,8 @@ void mediana_bloco();
 int mediana_bloco_aux(int x, int y);
 void media_simples();
 int media_simples_aux(int x, int y);
+void media_bloco();
+int media_bloco_aux(int x, int y);
 void ordena_vetor(int vetor[]);
 
 using namespace std;
@@ -233,6 +235,73 @@ void mediana_bloco()
     }
 
     cout << "Concluiu Mediana Bloco." << endl;
+}
+
+/**
+ * Este método auxiliar ajuda a calcular a média de um pixel.
+ *
+ * Índices do vetor:
+ * 0 1 2
+ * 3 4 5
+ * 6 7 8
+ */
+int media_bloco_aux(int x, int y)
+{
+    int acumula = 0;
+
+    int vetor[9];
+
+    vetor[0] = NewImage.GetPointIntensity(x-1,y-1);
+    vetor[1] = NewImage.GetPointIntensity(x,y-1);
+    vetor[2] = NewImage.GetPointIntensity(x+1,y-1);
+
+    vetor[3] = NewImage.GetPointIntensity(x-1,y);
+    vetor[4] = NewImage.GetPointIntensity(x,y);
+    vetor[5] = NewImage.GetPointIntensity(x+1,y);
+
+    vetor[6] = NewImage.GetPointIntensity(x-1,y+1);
+    vetor[7] = NewImage.GetPointIntensity(x,y+1);
+    vetor[8] = NewImage.GetPointIntensity(x+1,y+1);
+
+    for(int i = 0; i < 9; i++)
+    {
+        acumula = acumula + vetor[i];
+    }
+
+    ordena_vetor(vetor);
+
+    return (int) acumula / 9;
+}
+
+/**
+ * Este método calcula a média de um pixel.
+ */
+void media_bloco()
+{
+    cout << "Iniciou Media..." << endl;
+
+    int x,y;
+    for(x=1; x<Image.SizeX()-1; x++)
+    {
+        for(y=1; y<Image.SizeY()-1; y++)
+        {
+            int valor = media_bloco_aux(x, y);
+
+            NewImage.DrawPixel(x-1,y-1,valor,valor,valor);
+            NewImage.DrawPixel(x,y-1,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y-1,valor,valor,valor);
+
+            NewImage.DrawPixel(x-1,y,valor,valor,valor);
+            NewImage.DrawPixel(x,y,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y,valor,valor,valor);
+
+            NewImage.DrawPixel(x-1,y+1,valor,valor,valor);
+            NewImage.DrawPixel(x,y+1,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y+1,valor,valor,valor);
+        }
+    }
+
+    cout << "Concluiu Media." << endl;
 }
 
 /**
@@ -508,7 +577,7 @@ void keyboard ( unsigned char key, int x, int y )
         break;
     //calcula média de bloco
     case '4':
-        //ToDo
+        media_bloco();
         glutPostRedisplay();
         break;
     //calcula histograma
@@ -518,7 +587,7 @@ void keyboard ( unsigned char key, int x, int y )
         break;
     //calcula mediana do histograma
     case '6':
-        //ToDo
+        //TODO
         glutPostRedisplay();
         break;
     //calcula limiar
