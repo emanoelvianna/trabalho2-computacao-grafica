@@ -34,7 +34,7 @@ int preto = 0;
 #define ALTURA_JAN 500
 #define TAMANHO 9
 
-void ConvertBlackAndWhite()
+void convert_black_and_white()
 {
     unsigned char r,g,b;
     int x,y;
@@ -58,7 +58,7 @@ void ConvertBlackAndWhite()
     cout << "Concluiu Black & White." << endl;
 }
 
-void findTeeth()
+void find_teeth()
 {
 
     unsigned char r,g,b;
@@ -85,13 +85,13 @@ void findTeeth()
 
 }
 
-void DetectImageBorders()
+void detect_image_borders()
 {
     cout << "Iniciou DetectImageBorders...." << endl;
     cout << "Concluiu DetectImageBorders." << endl;
 }
 
-void ConvertToGrayscale()
+void convert_to_grayscale()
 {
     cout << "Iniciou ConvertToGrayscale..." << endl;
     int x,y;
@@ -107,14 +107,7 @@ void ConvertToGrayscale()
     cout << "Concluiu ConvertToGrayscale." << endl;
 }
 
-void InvertImage()
-{
-    cout << "Iniciou InvertImage..." << endl;
-
-    cout << "Concluiu InvertImage." << endl;
-}
-
-void OrdenaVetor(int window[])
+void ordena_vetor(int window[])
 {
     branco = 0;
     preto = 0;
@@ -134,38 +127,66 @@ void OrdenaVetor(int window[])
     }
 }
 
-void MontaVetor(int Px, int Py, int Vetor[9])
+int auxiliar_mediana(int x, int y)
 {
-    int x = Px;
-    int y = Py;
+    int vetor[9];
+    vetor[0] = NewImage.GetPointIntensity(x - 1,y-1);
+    vetor[1] = NewImage.GetPointIntensity(x - 1,y);
+    vetor[2] = NewImage.GetPointIntensity(x - 1,y+1);
+    vetor[3] = NewImage.GetPointIntensity(x,y-1);
+    vetor[4] = NewImage.GetPointIntensity(x,y);
+    vetor[5] = NewImage.GetPointIntensity(x,y+1);
+    vetor[6] = NewImage.GetPointIntensity(x + 1,y-1);
+    vetor[7] = NewImage.GetPointIntensity(x + 1,y);
+    vetor[8] = NewImage.GetPointIntensity(x + 1,y+1);
 
-    Vetor[0] = NewImage.GetPointIntensity(x - 1,y-1);
-    Vetor[1] = NewImage.GetPointIntensity(x - 1,y);
-    Vetor[2] = NewImage.GetPointIntensity(x - 1,y+1);
-    Vetor[3] = NewImage.GetPointIntensity(x,y-1);
-    Vetor[4] = NewImage.GetPointIntensity(x,y);
-    Vetor[5] = NewImage.GetPointIntensity(x,y+1);
-    Vetor[6] = NewImage.GetPointIntensity(x + 1,y-1);
-    Vetor[7] = NewImage.GetPointIntensity(x + 1,y);
-    Vetor[8] = NewImage.GetPointIntensity(x + 1,y+1);
+    ordena_vetor(vetor);
+    return vetor[4];
 }
 
-void Mediana()
+void mediana()
 {
     cout << "-- iniciou mediana..." << endl;
     int x;
     int y;
     for(x = 1; x < Image.SizeX() - 1; x++){
         for(y = 1; y < Image.SizeY() - 1; y++){
-            MontaVetor(x, y, meuVetor);
-            OrdenaVetor(meuVetor);
-            NewImage.DrawPixel(x, y, meuVetor[4], meuVetor[4], meuVetor[4]);
+            int valor = auxiliar_mediana(x, y);
+            ordena_vetor(meuVetor);
+            NewImage.DrawPixel(x, y, valor, valor, valor);
         }
     }
     cout << "-- concluiu mediana." << endl;
 }
 
-void Histograma() {
+void mediana_bloco()
+{
+    cout << "Iniciou Mediana Bloco..." << endl;
+    int x,y;
+    for(x=1; x<Image.SizeX()-1; x += 3)
+    {
+        for(y=1; y<Image.SizeY()-1; y += 3)
+        {
+            int valor = auxiliar_mediana(x, y);
+            ordena_vetor(meuVetor);
+
+            NewImage.DrawPixel(x-1,y-1,valor,valor,valor);
+            NewImage.DrawPixel(x,y-1,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y-1,valor,valor,valor);
+
+            NewImage.DrawPixel(x-1,y,valor,valor,valor);
+            NewImage.DrawPixel(x,y,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y,valor,valor,valor);
+
+            NewImage.DrawPixel(x-1,y+1,valor,valor,valor);
+            NewImage.DrawPixel(x,y+1,valor,valor,valor);
+            NewImage.DrawPixel(x+1,y+1,valor,valor,valor);
+        }
+    }
+    cout << "Concluiu Mediana Bloco." << endl;
+}
+
+void histograma() {
     int x, y, i = 0;
     int frequencia[256];
 
@@ -188,7 +209,7 @@ void Histograma() {
     }
 }
 
-int DetectarPinos() {
+int detectar_pinos() {
     unsigned char r,g,b;
     int x,y;
     int i;
@@ -212,7 +233,7 @@ int DetectarPinos() {
     cout << "-- pinos detectados" << endl;
 }
 
-int DetectarDentina() {
+int detectar_dentina() {
     unsigned char r,g,b;
     int x,y;
     int i;
@@ -236,7 +257,7 @@ int DetectarDentina() {
     cout << "-- pinos detectados" << endl;
 }
 
-void efetuaPreenchimento(int x, int y, int vetor[9])
+void efetua_preenchimento(int x, int y, int vetor[9])
 {
     int i;
     for(i = 0; i < 9; i++) {
@@ -279,8 +300,8 @@ void preenche()
     for(x = 1; x < Image.SizeX() - 1; x = x + 3){
         for(y = 1; y < Image.SizeY() - 1; y = y + 3){
 
-            MontaVetor(x,y,meuVetor);
-            efetuaPreenchimento(x,y,meuVetor);
+            auxiliar_mediana(x,y);
+            efetua_preenchimento(x,y,meuVetor);
         }
     }
     cout << "Concluiu Preenche." << endl;
@@ -304,14 +325,11 @@ void init()
 
 void reshape( int w, int h )
 {
-    // Reset the coordinate system before modifying
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // Set the viewport to be the entire window
     glViewport(0, 0, w, h);
     gluOrtho2D(0,w,0,h);
 
-    // Set the clipping volume
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -321,29 +339,17 @@ void display( void )
 {
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Fundo de tela preto
     glClear(GL_COLOR_BUFFER_BIT);
-
     glMatrixMode(GL_MODELVIEW);
-
-// Ajusta o ZOOM da imagem para que apareca na metade da janela
     float zoomH = (glutGet(GLUT_WINDOW_WIDTH)/2.0)/(double)Image.SizeX();
     float zoomV = (glutGet(GLUT_WINDOW_HEIGHT))/(double)Image.SizeY();
     Image.SetZoomH(zoomH);
     Image.SetZoomV(zoomV);
-// posiciona a imagem no canto inferior esquerdo da janela
     Image.SetPos(0, 0);
-
-// posiciona a imagem nova na metada da direita da janela
     NewImage.SetPos(glutGet(GLUT_WINDOW_WIDTH)/2, 0);
-
-// Ajusta o ZOOM da imagem para que apareca na metade da janela
     NewImage.SetZoomH(zoomH);
     NewImage.SetZoomV(zoomV);
-
-// Coloca as imagens na tela
     Image.Display();
     NewImage.Display();
-
-// Mostra a tela OpenGL
     glutSwapBuffers();
 }
 
@@ -358,44 +364,44 @@ void keyboard ( unsigned char key, int x, int y )
         exit ( 0 );
         break;
     case '2':
-        ConvertBlackAndWhite();
+        convert_black_and_white();
         glutPostRedisplay();
         break;
     case 'g':
-        ConvertToGrayscale();
+        convert_to_grayscale();
         glutPostRedisplay();
         break;
     /** histograma **/
     case 'h':
-        Histograma();
+        histograma();
         glutPostRedisplay();
         break;
     /** pinos **/
     case 'p':
-        DetectarPinos();
+        detectar_pinos();
         glutPostRedisplay();
         break;
     /** dentina **/
     case 'd':
-        DetectarDentina();
+        detectar_dentina();
         glutPostRedisplay();
         break;
     /** bordas **/
     case 'b':
-        DetectImageBorders();
+        detect_image_borders();
         glutPostRedisplay();
         break;
     case 'i':
-        InvertImage();
+        mediana_bloco();
         glutPostRedisplay();
         break;
      case 'm':
-        Mediana();
+        mediana();
         glutPostRedisplay();
         break;
 
      case 't':
-        findTeeth();
+        find_teeth();
         //Mediana();
         preenche();
         preenche();
