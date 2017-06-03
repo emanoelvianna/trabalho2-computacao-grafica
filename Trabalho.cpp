@@ -25,6 +25,7 @@
 #include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "ImageClass.h"
 #include "SOIL/SOIL.h"
 
@@ -39,8 +40,12 @@ int histograma[255];
 unsigned char** r_matrix_aux;
 unsigned char** g_matrix_aux;
 unsigned char** b_matrix_aux;
+unsigned char** matrix_aux;
+int kernel_x[3][3];
+int kernel_y[3][3];
 
 //protótipos de funções
+void sobel();
 void inicializa_imagem_de_trabalho();
 void armazena_imagem_em_matriz_auxiliar();
 void carrega_imagem_de_matriz_auxiliar();
@@ -57,6 +62,66 @@ int media_bloco_aux(int x, int y);
 void ordena_vetor(int vetor[]);
 
 using namespace std;
+
+/**
+ * Aplica o filtro de sobel na imagem.
+ */
+void sobel()
+{
+    cout << "Iniciou Sobel...";
+
+    int x,y;
+
+    for(x=1; x<Image.SizeX()-1; x++)
+    {
+        for(y=1; y<Image.SizeY()-1; y++)
+        {
+            int magnitude = 0;
+            int valor_x = 0;
+            int valor_y = 0;
+
+            valor_x += kernel_x[0][0] * NewImage.GetPointIntensity(x-1,y-1);
+            valor_x += kernel_x[0][1] * NewImage.GetPointIntensity(x,y-1);
+            valor_x += kernel_x[0][2] * NewImage.GetPointIntensity(x+1,y-1);
+            valor_x += kernel_x[1][0] * NewImage.GetPointIntensity(x-1,y);
+            valor_x += kernel_x[1][1] * NewImage.GetPointIntensity(x,y);
+            valor_x += kernel_x[1][2] * NewImage.GetPointIntensity(x+1,y);
+            valor_x += kernel_x[2][0] * NewImage.GetPointIntensity(x-1,y+1);
+            valor_x += kernel_x[2][1] * NewImage.GetPointIntensity(x,y+1);
+            valor_x += kernel_x[2][2] * NewImage.GetPointIntensity(x+1,y+1);
+            valor_y += kernel_y[0][0] * NewImage.GetPointIntensity(x-1,y-1);
+            valor_y += kernel_y[0][1] * NewImage.GetPointIntensity(x,y-1);
+            valor_y += kernel_y[0][2] * NewImage.GetPointIntensity(x+1,y-1);
+            valor_y += kernel_y[1][0] * NewImage.GetPointIntensity(x-1,y);
+            valor_y += kernel_y[1][1] * NewImage.GetPointIntensity(x,y);
+            valor_y += kernel_y[1][2] * NewImage.GetPointIntensity(x+1,y);
+            valor_y += kernel_y[2][0] * NewImage.GetPointIntensity(x-1,y+1);
+            valor_y += kernel_y[2][1] * NewImage.GetPointIntensity(x,y+1);
+            valor_y += kernel_y[2][2] * NewImage.GetPointIntensity(x+1,y+1);
+
+            valor_x = valor_x * valor_x;
+            valor_y = valor_y * valor_y;
+            magnitude = valor_x + valor_y;
+            magnitude = (int) sqrt(magnitude);
+
+            //armazena a magnitude dos pixels em uma matriz auxiliar
+            matrix_aux[x][y] = magnitude;
+        }
+    }
+
+    //insere valores calculados na matriz de saída
+    for(x=1; x<Image.SizeX()-1; x++)
+    {
+        for(y=1; y<Image.SizeY()-1; y++)
+        {
+            unsigned char valor = matrix_aux[x][y];
+
+            NewImage.DrawPixel(x,y,valor,valor,valor);
+        }
+    }
+
+    cout << "Concluiu Sobel.";
+}
 
 /**
  * Armazena o rgb da imagem em uma estrutura auxiliar.
@@ -452,6 +517,7 @@ void init()
     int r,i;
 
     string nome = "0647.png";
+    //string nome = "imagem_de_teste_01.png";
     string path = "DadosOriginais/";
 
     nome =  path + nome;
@@ -471,7 +537,7 @@ void init()
         histograma[i] = 0;
     }
 
-    //aloca matrizes auxiliares que armazenam pixeis
+    //aloca matrizes auxiliares que armazenam pixels
     r_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
     for (i = 0; i < Image.SizeX(); i++)
     {
@@ -487,6 +553,31 @@ void init()
     {
         b_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
     }
+    matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
+    }
+
+    //inicializa kernel para cálculo do filtro sobel
+    kernel_x[0][0] = -1;
+    kernel_x[0][1] = 0;
+    kernel_x[0][2] = 1;
+    kernel_x[1][0] = -2;
+    kernel_x[1][1] = 0;
+    kernel_x[1][2] = 2;
+    kernel_x[2][0] = -1;
+    kernel_x[2][1] = 0;
+    kernel_x[2][2] = 1;
+    kernel_y[0][0] = 1;
+    kernel_y[0][1] = 2;
+    kernel_y[0][2] = 1;
+    kernel_y[1][0] = 0;
+    kernel_y[1][1] = 0;
+    kernel_y[1][2] = 0;
+    kernel_y[2][0] = -1;
+    kernel_y[2][1] = -2;
+    kernel_y[2][2] = -1;
 }
 
 /**
@@ -541,13 +632,13 @@ void display( void )
     glutSwapBuffers();
 }
 
-// **********************************************************************
-//  void keyboard ( unsigned char key, int x, int y )
-// **********************************************************************
-void keyboard ( unsigned char key, int x, int y )
+/**
+ * Trata eventos do teclado.
+ */
+void keyboard(unsigned char key, int x, int y)
 {
 
-    switch ( key )
+    switch(key)
     {
     //encerra o programa
     case 27:
@@ -627,6 +718,11 @@ void keyboard ( unsigned char key, int x, int y )
     case 'r':
         limiar_superior = limiar_superior + 10;
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
+        glutPostRedisplay();
+        break;
+    //calcula filtro de sobel
+    case 's':
+        sobel();
         glutPostRedisplay();
         break;
     default:
