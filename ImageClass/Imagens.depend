@@ -425,14 +425,17 @@
 	"SOIL/SOIL.h"
 	"ImageClass.h"
 
-1496206325 source:c:\users\emano\documents\desenvolvimento\repositorio\trabalho2-computacao-grafica\imageclass\exemplodemanipulacaodeimagens.cpp
-	<iostream>
-	<cmath>
+1496815831 source:c:\users\emano\documents\desenvolvimento\repositorio\trabalho2-computacao-grafica\imageclass\exemplodemanipulacaodeimagens.cpp
 	<windows.h>
 	"gl\glut.h"
 	<GLUT/glut.h>
-	"SOIL/SOIL.h"
+	<iostream>
+	<cmath>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
 	"ImageClass.h"
+	"SOIL/SOIL.h"
 
 1495992541 c:\users\emano\documents\desenvolvimento\repositorio\trabalho2-computacao-grafica\imageclass\gl\glut.h
 	"freeglut.h"
