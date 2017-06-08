@@ -1,11 +1,11 @@
 /**
- * Universidade: Pontifícia Universidade Católica do Rio Grande do Sul
- * Unidade: Faculdade de Informática
- * Curso: Bacharelado em Ciência da Computação
- * Disciplina: Computação Gráfica II
+ * Universidade: PontifÃ­cia Universidade CatÃ³lica do Rio Grande do Sul
+ * Unidade: Faculdade de InformÃ¡tica
+ * Curso: Bacharelado em CiÃªncia da ComputaÃ§Ã£o
+ * Disciplina: ComputaÃ§Ã£o GrÃ¡fica II
  * Turma: 128
  * Trabalho: Trabalho 2
- * Professor: Márcio Pinho
+ * Professor: MÃ¡rcio Pinho
  * Alunos: Emanoel Viana, Gabriell Araujo
  */
 
@@ -33,7 +33,7 @@
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
 
-//variáveis globais
+//variÃ¡veis globais
 ImageClass Image, NewImage;
 int limiar_inferior, limiar_superior;
 int histograma[255];
@@ -46,8 +46,11 @@ int kernel_y[3][3];
 const int LIMIAR = 120;
 const int TEETH = 59;
 const int PINOS = 120;
+int meuVetor[9];
+int branco = 0;
+int preto = 0;
 
-//protótipos de funções
+//protÃ³tipos de funÃ§Ãµes
 void sobel();
 void inicializa_imagem_de_trabalho();
 void armazena_imagem_em_matriz_auxiliar();
@@ -112,7 +115,7 @@ void sobel()
         }
     }
 
-    //insere valores calculados na matriz de saída
+    //insere valores calculados na matriz de saÃ­da
     for(x=1; x<Image.SizeX()-1; x++)
     {
         for(y=1; y<Image.SizeY()-1; y++)
@@ -196,12 +199,7 @@ void inicializa_imagem_de_trabalho()
 }
 
 /**
- * Este método auxiliar ajuda a calcular a mediana de um pixel.
- *
- * Índices do vetor:
- * 0 1 2
- * 3 4 5
- * 6 7 8
+ * Este mÃ©todo auxiliar ajuda a calcular a mediana de um pixel.
  */
 int mediana_simples_aux(int x, int y)
 {
@@ -225,7 +223,7 @@ int mediana_simples_aux(int x, int y)
 }
 
 /**
- * Este método calcula a mediana de um pixel.
+ * Este mÃ©todo calcula a mediana de um pixel.
  */
 void mediana_simples()
 {
@@ -244,12 +242,7 @@ void mediana_simples()
 }
 
 /**
- * Este método auxiliar ajuda a calcular a mediana de um pixel.
- *
- * Índices do vetor:
- * 0 1 2
- * 3 4 5
- * 6 7 8
+ * Este mÃ©todo auxiliar ajuda a calcular a mediana de um pixel.
  */
 int mediana_bloco_aux(int x, int y)
 {
@@ -273,7 +266,7 @@ int mediana_bloco_aux(int x, int y)
 }
 
 /**
- * Este método calcula a mediana de um pixel.
+ * Este mÃ©todo calcula a mediana de um pixel.
  */
 void mediana_bloco()
 {
@@ -304,12 +297,7 @@ void mediana_bloco()
 }
 
 /**
- * Este método auxiliar ajuda a calcular a média de um pixel.
- *
- * Índices do vetor:
- * 0 1 2
- * 3 4 5
- * 6 7 8
+ * Este mÃ©todo auxiliar ajuda a calcular a mÃ©dia de um pixel.
  */
 int media_bloco_aux(int x, int y)
 {
@@ -340,7 +328,7 @@ int media_bloco_aux(int x, int y)
 }
 
 /**
- * Este método calcula a média de um pixel.
+ * Este mÃ©todo calcula a mÃ©dia de um pixel.
  */
 void media_bloco()
 {
@@ -371,7 +359,7 @@ void media_bloco()
 }
 
 /**
- * auxiliar para ajudar a calcular a média de um pixel.
+ * auxiliar para ajudar a calcular a mÃ©dia de um pixel.
  */
 int media_simples_aux(int x, int y)
 {
@@ -402,7 +390,7 @@ int media_simples_aux(int x, int y)
 }
 
 /**
- *  calcula a média de um pixel.
+ *  calcula a mÃ©dia de um pixel.
  */
 void media_simples()
 {
@@ -514,25 +502,7 @@ void calcular_histograma_imagem_modificada() {
     }
 }
 
-/** sequencia de metodos para remover ruidos da imagem **/
-void remover_ruidos() {
-    inicializa_imagem_de_trabalho();
-    media_bloco();
-    media_bloco();
-    mediana_simples();
-    mediana_bloco();
-    mediana_bloco();
-    mediana_bloco();
-    mediana_bloco();
-    media_simples();
-    mediana_bloco();
-    mediana_simples();
-    sobel();
-    mediana_bloco();
-    //media_bloco();
-}
-
-int detectar() {
+int detectar_dentina() {
     unsigned char r,g,b;
     int x,y;
     int i;
@@ -541,10 +511,10 @@ int detectar() {
     {
         for(y=0; y<Image.SizeY(); y++)
         {
-            i = Image.GetPointIntensity(x,y);
-            Image.ReadPixel(x,y,r,g,b);
+            i = NewImage.GetPointIntensity(x,y);
+            NewImage.ReadPixel(x,y,r,g,b);
 
-            if (i > 29 )
+            if (i > 20 && i < 100 )
             {
                 /** realizando a pintura nos pinos de azul **/
                 NewImage.DrawPixel(x, y, 0, 255, 0);
@@ -623,7 +593,7 @@ void init()
         matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
     }
 
-    //inicializa kernel para cálculo do filtro sobel
+    //inicializa kernel para cÃ¡lculo do filtro sobel
     kernel_x[0][0] = -1;
     kernel_x[0][1] = 0;
     kernel_x[0][2] = 1;
@@ -672,7 +642,7 @@ void display( void )
 
     glMatrixMode(GL_MODELVIEW);
 
-    //ajusta o zoom da imagem para que apareça na metade da janela
+    //ajusta o zoom da imagem para que apareÃ§a na metade da janela
     float zoomH = (glutGet(GLUT_WINDOW_WIDTH)/2.0)/(double)Image.SizeX();
     float zoomV = (glutGet(GLUT_WINDOW_HEIGHT))/(double)Image.SizeY();
     Image.SetZoomH(zoomH);
@@ -684,7 +654,7 @@ void display( void )
     //posiciona a imagem nova na metada da direita da janela
     NewImage.SetPos(glutGet(GLUT_WINDOW_WIDTH)/2, 0);
 
-    //ajusta o zoom da imagem para que apareça na metade da janela
+    //ajusta o zoom da imagem para que apareÃ§a na metade da janela
     NewImage.SetZoomH(zoomH);
     NewImage.SetZoomV(zoomV);
 
@@ -694,6 +664,201 @@ void display( void )
 
     //mostra a tela OpenGL
     glutSwapBuffers();
+}
+
+void OrdenaVetor(int window[])
+{
+    branco = 0;
+    preto = 0;
+    int temp, i , j;
+    for(i = 0; i < 9; i++)
+    {
+        temp = window[i];
+
+        if(window[i] == 255){branco++;}
+            else{preto++;}
+
+        for(j = i-1; j >= 0 && temp < window[j]; j--)
+        {
+            window[j+1] = window[j];
+        }
+        window[j+1] = temp;
+    }
+}
+
+void MontaVetor(int Px, int Py, int Vetor[9])
+{
+    int x = Px;
+    int y = Py;
+
+    Vetor[0] = NewImage.GetPointIntensity(x - 1,y-1);
+    Vetor[1] = NewImage.GetPointIntensity(x - 1,y);
+    Vetor[2] = NewImage.GetPointIntensity(x - 1,y+1);
+    Vetor[3] = NewImage.GetPointIntensity(x,y-1);
+    Vetor[4] = NewImage.GetPointIntensity(x,y);
+    Vetor[5] = NewImage.GetPointIntensity(x,y+1);
+    Vetor[6] = NewImage.GetPointIntensity(x + 1,y-1);
+    Vetor[7] = NewImage.GetPointIntensity(x + 1,y);
+    Vetor[8] = NewImage.GetPointIntensity(x + 1,y+1);
+}
+
+void minha_mediana()
+{
+    cout << "-- iniciou mediana..." << endl;
+    int x;
+    int y;
+    for(x = 1; x < Image.SizeX() - 1; x++){
+        for(y = 1; y < Image.SizeY() - 1; y++){
+            MontaVetor(x, y, meuVetor);
+            OrdenaVetor(meuVetor);
+            NewImage.DrawPixel(x, y, meuVetor[4], meuVetor[4], meuVetor[4]);
+        }
+    }
+    cout << "-- concluiu mediana." << endl;
+}
+
+void efetuaPreenchimento(int x, int y, int vetor[9])
+{
+    int i;
+    for(i = 0; i < 9; i++) {
+        if(vetor[i] == 255) {
+            branco++;
+        } else {
+            preto++;
+        }
+    }
+    if(branco > preto) {
+        NewImage.DrawPixel(x - 1,y-1, 255,255,255);
+        NewImage.DrawPixel(x - 1,y, 255,255,255);
+        NewImage.DrawPixel(x - 1,y+1, 255,255,255);
+        NewImage.DrawPixel(x,y-1, 255,255,255);
+        NewImage.DrawPixel(x,y, 255,255,255);
+        NewImage.DrawPixel(x,y+1, 255,255,255);
+        NewImage.DrawPixel(x + 1,y-1, 255,255,255);
+        NewImage.DrawPixel(x + 1,y, 255,255,255);
+        NewImage.DrawPixel(x + 1,y+1, 255,255,255);
+    } else {
+        NewImage.DrawPixel(x - 1,y-1,0,0,0);
+        NewImage.DrawPixel(x - 1,y,0,0,0);
+        NewImage.DrawPixel(x - 1,y+1,0,0,0);
+        NewImage.DrawPixel(x,y-1,0,0,0);
+        NewImage.DrawPixel(x,y,0,0,0);
+        NewImage.DrawPixel(x,y+1,0,0,0);
+        NewImage.DrawPixel(x + 1,y-1, 0,0,0);
+        NewImage.DrawPixel(x + 1,y,0,0,0);
+        NewImage.DrawPixel(x + 1,y+1,0,0,0);
+
+    }
+}
+
+void preenche()
+{
+    cout << "Iniciou Preenche..." << endl;
+    int x;
+    int y;
+
+    for(x = 1; x < Image.SizeX() - 1; x = x + 3){
+        for(y = 1; y < Image.SizeY() - 1; y = y + 3){
+
+            MontaVetor(x,y,meuVetor);
+            efetuaPreenchimento(x,y,meuVetor);
+        }
+    }
+    cout << "Concluiu Preenche." << endl;
+}
+
+void findTeeth()
+{
+
+    unsigned char r,g,b;
+    int x,y;
+    int i;
+    cout << "Iniciou FINDING TEETH.....";
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            i = Image.GetPointIntensity(x,y); // VERIFICA O TOM DE CINZA DA IMAGEM
+            Image.ReadPixel(x,y,r,g,b);
+
+            if (TEETH < i && i < 77)
+            {
+                NewImage.DrawPixel(x, y,255,255,255);  // exibe um ponto BRANCO na imagem
+            }
+            else NewImage.DrawPixel(x, y, 0,0,0); // exibe um ponto PRETO na imagem
+
+        }
+    }
+    cout << "Concluiu FINDING TEETH." << endl;
+
+
+}
+
+/** sequencia de metodos para remover ruidos da imagem **/
+void run_1() {
+    inicializa_imagem_de_trabalho();
+    media_bloco();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    mediana_bloco();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+}
+
+void run_2() {
+    inicializa_imagem_de_trabalho();
+    media_bloco();
+    media_bloco();
+    mediana_simples();
+    mediana_bloco();
+    mediana_bloco();
+    mediana_bloco();
+    media_simples();
+    media_bloco();
+    media_simples();
+    media_bloco();
+    mediana_simples();
+    mediana_simples();
+    mediana_bloco();
+    mediana_simples();
+    minha_mediana();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    media_simples();
+    //sobel();
 }
 
 /**
@@ -725,12 +890,12 @@ void keyboard(unsigned char key, int x, int y)
         mediana_bloco();
         glutPostRedisplay();
         break;
-    //calcula média simples
+    //calcula mÃ©dia simples
     case '3':
         media_simples();
         glutPostRedisplay();
         break;
-    //calcula média de bloco
+    //calcula mÃ©dia de bloco
     case '4':
         media_bloco();
         glutPostRedisplay();
@@ -776,7 +941,7 @@ void keyboard(unsigned char key, int x, int y)
     case 'e':
         limiar_superior = limiar_superior - 10;
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();    // obrigatÃ³rio para redesenhar a tela
         break;
     //incrementa limiar superior
     case 'r':
@@ -791,22 +956,37 @@ void keyboard(unsigned char key, int x, int y)
         break;
     /** sequencia de metodos para remover ruidos  **/
     case 'b':
-        remover_ruidos();
+        run_1();
+        glutPostRedisplay();
         break;
     /** sequencia de metodos para remover ruidos  **/
     case 'h':
         calcular_histograma_imagem_modificada();
+        glutPostRedisplay();
         break;
     case 'v':
-        detectar();
+        detectar_dentina();
+        glutPostRedisplay();
         break;
+    case 'n':
+        minha_mediana();
+        glutPostRedisplay();
+        break;
+    case 't':
+        findTeeth();
+        //Mediana();
+        preenche();
+        glutPostRedisplay();
+    case 'm':
+        run_2();
+        glutPostRedisplay();
     default:
         break;
     }
 }
 
 /**
- * Função main.
+ * FunÃ§Ã£o main.
  */
 int main (int argc, char** argv)
 {
@@ -815,7 +995,7 @@ int main (int argc, char** argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
     glutInitWindowPosition(10,10);
 
-    //define o tamanho da janela gráfica do programa
+    //define o tamanho da janela grÃ¡fica do programa
     glutInitWindowSize(LARGURA_JAN, ALTURA_JAN);
     glutCreateWindow("Image Loader");
 
