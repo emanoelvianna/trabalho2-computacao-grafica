@@ -506,7 +506,7 @@ int detectar_dentina() {
     unsigned char r,g,b;
     int x,y;
     int i;
-    cout << "-- detectarPinos...." << endl;
+    cout << "-- detectar dentina...." << endl;
     for(x=0; x<Image.SizeX(); x++)
     {
         for(y=0; y<Image.SizeY(); y++)
@@ -514,7 +514,7 @@ int detectar_dentina() {
             i = NewImage.GetPointIntensity(x,y);
             NewImage.ReadPixel(x,y,r,g,b);
 
-            if (i > 20 && i < 100 )
+            if (i > 7 && i < 50 )
             {
                 /** realizando a pintura nos pinos de azul **/
                 NewImage.DrawPixel(x, y, 0, 255, 0);
@@ -523,9 +523,32 @@ int detectar_dentina() {
 
         }
     }
-    cout << "-- pinos detectados" << endl;
+    cout << "-- dentina detectada" << endl;
 }
 
+int detectar_pinos() {
+    unsigned char r,g,b;
+    int x,y;
+    int i;
+    cout << "-- detectar pinos...." << endl;
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            i = NewImage.GetPointIntensity(x,y);
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if (i > 100 && i < 200 )
+            {
+                /** realizando a pintura nos pinos de azul **/
+                NewImage.DrawPixel(x, y, 0, 0, 255);
+            }
+            //else NewImage.DrawPixel(x, y, 0,0,0);
+
+        }
+    }
+    cout << "-- pinos detectados" << endl;
+}
 /**
  * Ordena um vetor.
  */
@@ -964,10 +987,6 @@ void keyboard(unsigned char key, int x, int y)
         calcular_histograma_imagem_modificada();
         glutPostRedisplay();
         break;
-    case 'v':
-        detectar_dentina();
-        glutPostRedisplay();
-        break;
     case 'n':
         minha_mediana();
         glutPostRedisplay();
@@ -980,6 +999,13 @@ void keyboard(unsigned char key, int x, int y)
     case 'm':
         run_2();
         glutPostRedisplay();
+    case 'p':
+        detectar_pinos();
+        glutPostRedisplay();
+    case 'd':
+        detectar_dentina();
+        glutPostRedisplay();
+        break;
     default:
         break;
     }
