@@ -96,6 +96,8 @@ void adiciona_ponto_em_lista_aux(ponto ponto_aux);
 ponto remove_ponto_em_lista_aux();
 bool o_ponto_e_valido(int x,int y);
 void detectar_dentinas_e_pinos();
+void remover_bordas_brancas(int x_inicial, int y_inicial);
+void pinta_pixels_brancos_de_vermelho();
 
 using namespace std;
 
@@ -129,6 +131,33 @@ void detectar_dentinas_e_pinos()
     detectar_fundo_preto_apos_detectar_dentinas(Image.SizeX()/2,Image.SizeY()/2);
     imprimir_pixels_pretos();
     printf("CONCLUIDO]\n");
+
+	//remover_bordas_brancas(Image.SizeX()/2,Image.SizeY()/2);
+	//imprimir_pixels_pretos();
+	//pinta_pixels_brancos_de_vermelho();
+	//imprimir_pixels_vermelhos();
+}
+
+/**
+ * Armazena coordenadas de pixels brancos na matriz de mpixels vermelhos.
+ */
+void pinta_pixels_brancos_de_vermelho()
+{
+    unsigned char r,g,b;
+    int x,y;
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+			NewImage.ReadPixel(x,y,r,g,b);
+	
+            if(r == 255 && g == 255 && b == 255)
+            {
+                pixels_vermelhos[x][y] = true;
+            }
+        }
+    }
 }
 
 /**
@@ -236,17 +265,6 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
         }
     }
 
-    //for(x=0; x<Image.SizeX(); x++)
-    //{
-    //    for(y=0; y<Image.SizeY(); y++)
-    //    {
-    //		pixels_pretos[x][y] = false;
-    //		pixels_verdes[x][y] = false;
-    //   }
-    //}
-
-    //NewImage.ReadPixel(x,y,r,g,b);
-
     //cria ponto inicial
     ponto ponto_inicial;
     ponto_inicial.x = x_inicial;
@@ -258,9 +276,7 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
 
     while(contador_lista_aux > 0)
     {
-        //printf("CONTADOR = %d --- LISTA = %d\n", contador, contador_lista_aux);
         contador++;
-        //if(contador % 1000000 == 0){printf(" [ITERACAO=%d --- PIXELS_NA_LISTA=%d] ", contador, contador_lista_aux);}
         int k;
 
         ponto ponto_atual = remove_ponto_em_lista_aux();
@@ -273,8 +289,6 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
         vetor_de_coordenadas(x_atual,y_atual,vetor);
 
         int resultado = matriz_de_pixels_visitados[x_atual][y_atual];
-        //printf("MATRIZ VISITADA: %d\n", resultado);
-        //printf("PIXEL X: %d --- PIXEL Y: %d\n\n", x_atual,y_atual);
 
         pixels_pretos[x_atual][y_atual] = true;
         pixels_verdes[x_atual][y_atual] = false;
@@ -287,6 +301,7 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
             if(o_ponto_e_valido(x_novo, y_novo) == true)
             {
                 resultado = matriz_de_pixels_visitados[x_novo][y_novo];
+
                 //se este pixel ainda não foi visitado
                 if(resultado == 0)
                 {
@@ -297,6 +312,95 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
 
                     //se o pixel é verde
                     if( (r == 0 && g == 255 && b == 0) || (r == 0 && g == 0 && b == 0))
+                    {
+                        ponto ponto_novo;
+                        ponto_novo.x = x_novo;
+                        ponto_novo.y = y_novo;
+                        adiciona_ponto_em_lista_aux(ponto_novo);
+                    }
+                }
+            }
+        }
+    }
+
+    //printf(" [CONTADOR = %d --- LISTA = %d] ", contador, contador_lista_aux);
+}
+
+/**
+ * Varre o fundo da imagem removendo bordas brancas.
+ */
+void remover_bordas_brancas(int x_inicial, int y_inicial)
+{
+    int contador = 0;
+    unsigned char r,g,b;
+    int x,y;
+
+    contador_lista_aux = 0;
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            matriz_de_pixels_visitados[x][y] = 0;
+        }
+    }
+
+    //cria ponto inicial
+    ponto ponto_inicial;
+    ponto_inicial.x = x_inicial;
+    ponto_inicial.y = y_inicial;
+
+    adiciona_ponto_em_lista_aux(ponto_inicial);
+
+    matriz_de_pixels_visitados[ponto_inicial.x][ponto_inicial.y] = 1;
+
+    while(contador_lista_aux > 0)
+    {
+        contador++;
+        int k;
+
+        ponto ponto_atual = remove_ponto_em_lista_aux();
+
+        int x_atual = ponto_atual.x;
+        int y_atual = ponto_atual.y;
+
+        ponto vetor[9];
+
+        vetor_de_coordenadas(x_atual,y_atual,vetor);
+
+        int resultado = matriz_de_pixels_visitados[x_atual][y_atual];
+
+        NewImage.ReadPixel(x_atual,y_atual,r,g,b);
+
+
+		//se pixel é branco, sinaliza como preto
+		if(r == 255 && g == 255 && b == 255)
+		{
+			pixels_pretos[x_atual][y_atual] = true;
+			pixels_verdes[x_atual][y_atual] = false;
+			pixels_azuis[x_atual][y_atual] = false;
+			pixels_vermelhos[x_atual][y_atual] = false;
+		}
+
+        for(k=0; k<9; k++)
+        {
+            int x_novo = vetor[k].x;
+            int y_novo = vetor[k].y;
+
+            if(o_ponto_e_valido(x_novo, y_novo) == true)
+            {
+                resultado = matriz_de_pixels_visitados[x_novo][y_novo];
+
+                //se este pixel ainda não foi visitado
+                if(resultado == 0)
+                {
+                    //marca pixel adjacente
+                    matriz_de_pixels_visitados[x_novo][y_novo] = 1;
+
+                    NewImage.ReadPixel(x_novo,y_novo,r,g,b);
+
+                    //se o pixel é verde
+                    if( (r == 255 && g == 255 && b == 255) || (r == 0 && g == 0 && b == 0))
                     {
                         ponto ponto_novo;
                         ponto_novo.x = x_novo;
@@ -400,7 +504,7 @@ void imprimir_pixels_vermelhos()
 
             if(pixels_vermelhos[x][y] == true)
             {
-                NewImage.DrawPixel(x,y,0,0,255);
+                NewImage.DrawPixel(x,y,255,0,0);
             }
         }
     }
