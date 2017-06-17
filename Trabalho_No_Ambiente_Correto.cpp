@@ -22,6 +22,8 @@
 #endif
 
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +35,7 @@
 //constantes
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
+#define IMAGENS_NA_PASTA 10
 
 //estruturas
 typedef struct
@@ -61,6 +64,8 @@ int contador_lista_aux;
 bool ruidos_extremos;
 bool detectando_fundo;
 int media_extra_para_ruidos_extremos;
+bool precisa_desalocar_memoria;
+int numero_imagem;
 
 //protótipos de funções
 int main(int argc,char** argv);
@@ -104,17 +109,218 @@ void segmenta_fundo_de_verde_para_preto(int x_inicial,int y_inicial);
 void segmenta_fundo_de_vermelho_para_preto(int x_inicial,int y_inicial);
 void segmenta_fundo_de_preto_para_branco(int x_inicial,int y_inicial);
 void pinta_de_vermelho_os_pixels_com_limiar_baixo();
+void inicializa_estruturas();
+void desaloca_memoria();
 void executa_algoritmo();
-void executar_trabalho();
+void executa_trabalho();
+void processa_imagem();
+void carrega_imagem_ground_truth();
+void calcula_estatisticas();
 
 using namespace std;
 
 /**
- * Executa o algoritmo de detecção para todas as imagens
+ *
  */
-void executar_trabalho()
+void calcula_estatisticas()
 {
-    //TODO
+	
+}
+
+/**
+ * Carrega a imagem ground truth em Image.
+ */
+void carrega_imagem_ground_truth()
+{
+	int r;
+
+    string nome = ".png";
+    string path = "imagens/segmentadas/";
+
+    stringstream sstm;
+    sstm << numero_imagem << nome;
+    nome = sstm.str();
+
+    nome =  path + nome;
+    r = Image.Load(nome.c_str());
+
+    if (!r) exit(1);
+}
+
+/**
+ * Inicializa estruturas e executa o algoritmo para a imagem "numero_imagem".
+ */
+void processa_imagem()
+{
+    inicializa_estruturas();
+    executa_algoritmo();
+}
+
+/**
+ * Desaloca estruturas alocadas para o algoritmo.
+ */
+void desaloca_memoria()
+{
+	free(r_matrix_aux);
+	free(g_matrix_aux);
+	free(b_matrix_aux);
+	free(matrix_aux);
+	free(pixels_azuis);
+	free(pixels_verdes);
+	free(pixels_vermelhos);
+	free(pixels_pretos);
+	free(pixels_fundo);
+	free(matriz_de_pixels_visitados);
+	free(lista_busca_aux);
+}
+
+/**
+ * Inicializa estruturas usadas para executar o algoritmo.
+ */
+void inicializa_estruturas()
+{
+    if(precisa_desalocar_memoria == true)
+    {
+        desaloca_memoria();
+    }
+    else
+    {
+        precisa_desalocar_memoria = true;
+    }
+
+    int r,i,x,y;
+
+    detectando_fundo = false;
+
+    media_extra_para_ruidos_extremos = 12;
+    ruidos_extremos = false;
+
+    if(numero_imagem >= 5)
+    {
+        ruidos_extremos = true;
+    }
+
+    string nome = ".png";
+    string path = "imagens/originais/";
+    string path_ground_truth = "imagens/segmentadas/";
+
+    stringstream sstm;
+    sstm << numero_imagem << nome;
+    nome = sstm.str();
+
+    nome =  path + nome;
+    r = Image.Load(nome.c_str());
+
+    if (!r) exit(1);
+
+    NewImage.SetSize(Image.SizeX(), Image.SizeY(), Image.Channels());
+
+    //limiares iniciais
+    limiar_inferior = 0;
+    limiar_superior = 70;
+
+    //aloca matrizes auxiliares
+    r_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        r_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
+    }
+    g_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        g_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
+    }
+    b_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        b_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
+    }
+    matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
+    }
+    pixels_azuis = (bool**) malloc(Image.SizeX() * sizeof (bool*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        pixels_azuis[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
+    }
+    pixels_verdes = (bool**) malloc(Image.SizeX() * sizeof (bool*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        pixels_verdes[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
+    }
+    pixels_vermelhos = (bool**) malloc(Image.SizeX() * sizeof (bool*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        pixels_vermelhos[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
+    }
+    pixels_pretos = (bool**) malloc(Image.SizeX() * sizeof (bool*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        pixels_pretos[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
+    }
+    pixels_fundo = (bool**) malloc(Image.SizeX() * sizeof (bool*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        pixels_fundo[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
+    }
+    matriz_de_pixels_visitados = (int**) malloc(Image.SizeX() * sizeof (int*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        matriz_de_pixels_visitados[i] = (int*) malloc(Image.SizeY() * sizeof (int));
+    }
+
+    //inicializa lista de auxílio para a execução de algoritmos de segmentação
+    int size_aux = Image.SizeX() * Image.SizeY();
+    lista_busca_aux = (ponto*) malloc(size_aux * sizeof (ponto));
+    contador_lista_aux = 0;
+
+    //inicializa kernel para cálculo do filtro sobel
+    kernel_x[0][0] = -1;
+    kernel_x[0][1] = 0;
+    kernel_x[0][2] = 1;
+    kernel_x[1][0] = -2;
+    kernel_x[1][1] = 0;
+    kernel_x[1][2] = 2;
+    kernel_x[2][0] = -1;
+    kernel_x[2][1] = 0;
+    kernel_x[2][2] = 1;
+    kernel_y[0][0] = 1;
+    kernel_y[0][1] = 2;
+    kernel_y[0][2] = 1;
+    kernel_y[1][0] = 0;
+    kernel_y[1][1] = 0;
+    kernel_y[1][2] = 0;
+    kernel_y[2][0] = -1;
+    kernel_y[2][1] = -2;
+    kernel_y[2][2] = -1;
+
+    //zera valores de matrizes
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            pixels_azuis[x][y] = false;
+            pixels_vermelhos[x][y] = false;
+            pixels_verdes[x][y] = false;
+            pixels_pretos[x][y] = false;
+            pixels_fundo[x][y] = false;
+            matriz_de_pixels_visitados[x][y] = 0;
+        }
+    }
+}
+
+/**
+ * Executa o algoritmo de segmentação para todas as imagens da pasta.
+ */
+void executa_trabalho()
+{
+    for(numero_imagem=0; numero_imagem<IMAGENS_NA_PASTA; numero_imagem++)
+	{
+		processa_imagem();
+		carrega_imagem_ground_truth();
+	}
 }
 
 /**
@@ -1444,125 +1650,8 @@ void ordena_vetor(int vetor[])
  */
 void init()
 {
-    int r,i,x,y;
-
-    detectando_fundo = false;
-
-    //número da imagem a ser lida
-    int numero_imagem = 10;
-
-    media_extra_para_ruidos_extremos = 12;
-    ruidos_extremos = false;
-
-    if(numero_imagem > 5)
-    {
-        ruidos_extremos = true;
-    }
-
-    string nome = "imagens/originais/10.png";
-    string path = "";
-
-    nome =  path + nome;
-    r = Image.Load(nome.c_str());
-
-    if (!r) exit(1);
-
-    NewImage.SetSize(Image.SizeX(), Image.SizeY(), Image.Channels());
-
-    //limiares iniciais
-    limiar_inferior = 0;
-    limiar_superior = 70;
-
-    //aloca matrizes auxiliares que armazenam pixels
-    r_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        r_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
-    }
-    g_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        g_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
-    }
-    b_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        b_matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
-    }
-    matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        matrix_aux[i] = (unsigned char*) malloc(Image.SizeY() * sizeof (unsigned char));
-    }
-    pixels_azuis = (bool**) malloc(Image.SizeX() * sizeof (bool*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        pixels_azuis[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
-    }
-    pixels_verdes = (bool**) malloc(Image.SizeX() * sizeof (bool*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        pixels_verdes[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
-    }
-    pixels_vermelhos = (bool**) malloc(Image.SizeX() * sizeof (bool*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        pixels_vermelhos[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
-    }
-    pixels_pretos = (bool**) malloc(Image.SizeX() * sizeof (bool*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        pixels_pretos[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
-    }
-    pixels_fundo = (bool**) malloc(Image.SizeX() * sizeof (bool*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        pixels_fundo[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
-    }
-    matriz_de_pixels_visitados = (int**) malloc(Image.SizeX() * sizeof (int*));
-    for (i = 0; i < Image.SizeX(); i++)
-    {
-        matriz_de_pixels_visitados[i] = (int*) malloc(Image.SizeY() * sizeof (int));
-    }
-
-    //inicializa lista de auxílio para a execução de algoritmos de segmentação
-    int size_aux = Image.SizeX() * Image.SizeY();
-    lista_busca_aux = (ponto*) malloc(size_aux * sizeof (ponto));
-    contador_lista_aux = 0;
-
-    //inicializa kernel para cálculo do filtro sobel
-    kernel_x[0][0] = -1;
-    kernel_x[0][1] = 0;
-    kernel_x[0][2] = 1;
-    kernel_x[1][0] = -2;
-    kernel_x[1][1] = 0;
-    kernel_x[1][2] = 2;
-    kernel_x[2][0] = -1;
-    kernel_x[2][1] = 0;
-    kernel_x[2][2] = 1;
-    kernel_y[0][0] = 1;
-    kernel_y[0][1] = 2;
-    kernel_y[0][2] = 1;
-    kernel_y[1][0] = 0;
-    kernel_y[1][1] = 0;
-    kernel_y[1][2] = 0;
-    kernel_y[2][0] = -1;
-    kernel_y[2][1] = -2;
-    kernel_y[2][2] = -1;
-
-    //zera valores de matrizes
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            pixels_azuis[x][y] = false;
-            pixels_vermelhos[x][y] = false;
-            pixels_verdes[x][y] = false;
-            pixels_pretos[x][y] = false;
-            pixels_fundo[x][y] = false;
-            matriz_de_pixels_visitados[x][y] = 0;
-        }
-    }
+    precisa_desalocar_memoria = false;
+    numero_imagem = 0;
 }
 
 /**
@@ -1699,10 +1788,23 @@ void keyboard(unsigned char key, int x, int y)
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
         glutPostRedisplay();
         break;
-    //executa algoritmo de detecção
-    case 'a':
-        executa_algoritmo();
-        glutPostRedisplay();
+	//escolhe imagem anterior
+    case 'b':
+		numero_imagem--;
+        if(numero_imagem < 0)
+		{
+			numero_imagem = 0;
+		}
+		printf("IMAGEM ESCOLHIDA = %d\n",numero_imagem);
+        break;
+	//escolhe imagem seguinte
+    case 'n':
+        numero_imagem++;
+        if(numero_imagem >= IMAGENS_NA_PASTA)
+		{
+			numero_imagem = IMAGENS_NA_PASTA-1;
+		}
+		printf("IMAGEM ESCOLHIDA = %d\n",numero_imagem);
         break;
     //calcula filtro de sobel
     case 's':
@@ -1751,7 +1853,17 @@ void keyboard(unsigned char key, int x, int y)
         break;
     //executa o trabalho o algoritmo para todas as imagens
     case 't':
-        executar_trabalho();
+        executa_trabalho();
+        glutPostRedisplay();
+        break;
+    //processa imagem escolhida
+    case 'a':
+        processa_imagem();
+        glutPostRedisplay();
+        break;
+	//executa o trabalho o algoritmo para todas as imagens
+    case 'z':
+        carrega_imagem_ground_truth();
         glutPostRedisplay();
         break;
     default:
