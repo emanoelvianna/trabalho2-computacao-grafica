@@ -61,9 +61,13 @@ bool** pixels_azuis;
 bool** pixels_verdes;
 bool** pixels_vermelhos;
 bool** pixels_pretos;
+bool** pixels_fundo;
 int** matriz_de_pixels_visitados;
 ponto* lista_busca_aux;
 int contador_lista_aux;
+bool ruidos_extremos;
+int media_simples_extra;
+bool detectando_fundo;
 
 //protótipos de funções
 void sobel();
@@ -90,6 +94,7 @@ void imprimir_pixels_azuis();
 void imprimir_pixels_vermelhos();
 void imprimir_pixels_verdes();
 void imprimir_pixels_pretos();
+void imprimir_pixels_fundo();
 void imprimir_todos_os_pixels();
 void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial,int y_inicial);
 void adiciona_ponto_em_lista_aux(ponto ponto_aux);
@@ -98,44 +103,180 @@ bool o_ponto_e_valido(int x,int y);
 void detectar_dentinas_e_pinos();
 void remover_bordas_brancas(int x_inicial, int y_inicial);
 void pinta_pixels_brancos_de_vermelho();
+void pinta_pixels_pretos_de_vermelho();
+void teste_deteccao();
+void pintar_fundo_com_parametros(int x_inicial, int y_inicial);
+void pintar_fundo_preto_e_destacar_canais_inferiores(int x_inicial, int y_inicial);
+void remover_ruidos_para_fundo();
+void salvar_pixels();
 
 using namespace std;
+
+void salvar_pixels()
+{
+	unsigned char r,g,b;
+    int x,y;
+
+	for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+			pixels_fundo[x][y] = true;
+            pixels_pretos[x][y] = false;
+			pixels_vermelhos[x][y] = false;
+			pixels_verdes[x][y] = false;
+			pixels_azuis[x][y] = false;
+        }
+    }
+
+	for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if(r==0 && g==0 && b==0)
+            {
+                pixels_pretos[x][y] = true;
+            }
+			if(r==255 && g==0 && b==0)
+            {
+                pixels_vermelhos[x][y] = true;
+            }
+			if(r==0 && g==255 && b==0)
+            {
+                pixels_verdes[x][y] = true;
+            }
+			if(r==0 && g==0 && b==255)
+            {
+                pixels_azuis[x][y] = true;
+            }
+        }
+    }
+}
+
+void teste_deteccao()
+{
+    unsigned char r,g,b;
+    int x,y;
+
+    //elementos do fundo
+    detectando_fundo = true;
+    detectar_dentinas_e_pinos();
+    detectando_fundo = false;
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if(r==0 && g==0 && b==0)
+            {
+                pixels_fundo[x][y] = true;
+            }
+            else
+            {
+                pixels_azuis[x][y] = false;
+                pixels_verdes[x][y] = false;
+                pixels_vermelhos[x][y] = false;
+                pixels_pretos[x][y] = false;
+            }
+        }
+    }
+
+
+
+    inicializa_imagem_de_trabalho();
+    detectar_pinos();
+
+    inicializa_imagem_de_trabalho();
+    remover_ruidos();
+
+    //armazena quais pixels devem ser pintados de verde
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if(r==0 && g==0 && b==0)
+            {
+                pixels_pretos[x][y] = true;
+            }
+            else
+            {
+                if(pixels_azuis[x][y] == false)
+                {
+                    pixels_verdes[x][y] = true;
+                }
+            }
+        }
+    }
+
+    pinta_pixels_pretos_de_vermelho();
+    pintar_fundo_com_parametros(100,100);
+    imprimir_pixels_pretos();
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if(r==255 && g==0 && b==0)
+            {
+                pixels_vermelhos[x][y] = true;
+            }
+        }
+    }
+
+    imprimir_pixels_verdes();
+
+    pintar_fundo_preto_e_destacar_canais_inferiores(100,100);
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if(r==0 && g==0 && b==0)
+            {
+                pixels_vermelhos[x][y] = true;
+            }
+        }
+    }
+
+    detectar_pinos();
+    //imprimir_pixels_pretos();
+
+
+    imprimir_pixels_pretos();
+    imprimir_pixels_verdes();
+    imprimir_pixels_azuis();
+    imprimir_pixels_fundo();
+    imprimir_pixels_vermelhos();
+
+	armazena_imagem_em_matriz_auxiliar();
+	salvar_pixels();
+}
 
 /**
  * Sequência de passos que detecta as dentinas e pinos da imagem.
  */
 void detectar_dentinas_e_pinos()
 {
-    int x,y;
-
-    //zera valores de pixels
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            pixels_azuis[x][y] = false;
-            pixels_vermelhos[x][y] = false;
-            pixels_verdes[x][y] = false;
-            pixels_pretos[x][y] = false;
-        }
-    }
-
-    printf("[DETECTANDO DENTINAS > ");
+    //printf("[DETECTANDO DENTINAS > ");
     detectar_dentina();
-    printf("DETECTANDO PINOS > ");
+    //printf("DETECTANDO PINOS > ");
     detectar_pinos();
     imprimir_pixels_verdes();
     imprimir_pixels_azuis();
-    printf("DETECTANDO FUNDO > ");
+    //printf("DETECTANDO FUNDO > ");
     detectar_fundo_preto_apos_detectar_dentinas(100,100);
     detectar_fundo_preto_apos_detectar_dentinas(Image.SizeX()/2,Image.SizeY()/2);
-    imprimir_pixels_pretos();
-    printf("CONCLUIDO]\n");
-
-	//remover_bordas_brancas(Image.SizeX()/2,Image.SizeY()/2);
-	//imprimir_pixels_pretos();
-	//pinta_pixels_brancos_de_vermelho();
-	//imprimir_pixels_vermelhos();
+    //imprimir_pixels_pretos();
+    //printf("CONCLUIDO]\n");
 }
 
 /**
@@ -150,11 +291,30 @@ void pinta_pixels_brancos_de_vermelho()
     {
         for(y=0; y<Image.SizeY(); y++)
         {
-			NewImage.ReadPixel(x,y,r,g,b);
-	
+            NewImage.ReadPixel(x,y,r,g,b);
+
             if(r == 255 && g == 255 && b == 255)
             {
                 pixels_vermelhos[x][y] = true;
+            }
+        }
+    }
+}
+
+void pinta_pixels_pretos_de_vermelho()
+{
+    unsigned char r,g,b;
+    int x,y;
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if(r <= 10 && g <= 10 && b <= 10)
+            {
+                NewImage.DrawPixel(x,y,255,0,0);
             }
         }
     }
@@ -246,6 +406,170 @@ void vetor_de_coordenadas(int x, int y, ponto vetor[9])
     vetor[8].y = y+1;
 }
 
+void pintar_fundo_preto_e_destacar_canais_inferiores(int x_inicial, int y_inicial)
+{
+    int contador = 0;
+    unsigned char r,g,b;
+    int x,y;
+
+    contador_lista_aux = 0;
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            matriz_de_pixels_visitados[x][y] = 0;
+            pixels_pretos[x][y] = false;
+        }
+    }
+
+    //cria ponto inicial
+    ponto ponto_inicial;
+    ponto_inicial.x = x_inicial;
+    ponto_inicial.y = y_inicial;
+
+    adiciona_ponto_em_lista_aux(ponto_inicial);
+
+    matriz_de_pixels_visitados[ponto_inicial.x][ponto_inicial.y] = 1;
+
+    while(contador_lista_aux > 0)
+    {
+        //if(contador % 100000 == 0)
+        //{
+        //	printf("CONTADOR = %d --- LISTA = %d]\n", contador, contador_lista_aux);
+        //}
+
+        contador++;
+        int k;
+
+        ponto ponto_atual = remove_ponto_em_lista_aux();
+
+        int x_atual = ponto_atual.x;
+        int y_atual = ponto_atual.y;
+
+        ponto vetor[9];
+
+        vetor_de_coordenadas(x_atual,y_atual,vetor);
+
+        int resultado = matriz_de_pixels_visitados[x_atual][y_atual];
+
+        //pixels_pretos[x_atual][y_atual] = false;
+        NewImage.DrawPixel(x_atual,y_atual,255,255,255);
+
+        for(k=0; k<9; k++)
+        {
+            int x_novo = vetor[k].x;
+            int y_novo = vetor[k].y;
+
+            if(o_ponto_e_valido(x_novo, y_novo) == true)
+            {
+                resultado = matriz_de_pixels_visitados[x_novo][y_novo];
+
+                if(resultado == 0)
+                {
+                    //marca pixel adjacente
+                    matriz_de_pixels_visitados[x_novo][y_novo] = 1;
+
+                    NewImage.ReadPixel(x_novo,y_novo,r,g,b);
+
+                    //se o pixel é verde
+                    if( (r == 0 && g == 0 && b == 0) || (r == 0 && g == 0 && b == 0))
+                    {
+                        ponto ponto_novo;
+                        ponto_novo.x = x_novo;
+                        ponto_novo.y = y_novo;
+                        adiciona_ponto_em_lista_aux(ponto_novo);
+                    }
+                }
+            }
+        }
+    }
+
+    //printf(" [CONTADOR = %d --- LISTA = %d] ", contador, contador_lista_aux);
+}
+
+void pintar_fundo_com_parametros(int x_inicial, int y_inicial)
+{
+    int contador = 0;
+    unsigned char r,g,b;
+    int x,y;
+
+    contador_lista_aux = 0;
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            matriz_de_pixels_visitados[x][y] = 0;
+            pixels_pretos[x][y] = false;
+        }
+    }
+
+    //cria ponto inicial
+    ponto ponto_inicial;
+    ponto_inicial.x = x_inicial;
+    ponto_inicial.y = y_inicial;
+
+    adiciona_ponto_em_lista_aux(ponto_inicial);
+
+    matriz_de_pixels_visitados[ponto_inicial.x][ponto_inicial.y] = 1;
+
+    while(contador_lista_aux > 0)
+    {
+        //if(contador % 100000 == 0)
+        //{
+        //	printf("CONTADOR = %d --- LISTA = %d]\n", contador, contador_lista_aux);
+        //}
+
+        contador++;
+        int k;
+
+        ponto ponto_atual = remove_ponto_em_lista_aux();
+
+        int x_atual = ponto_atual.x;
+        int y_atual = ponto_atual.y;
+
+        ponto vetor[9];
+
+        vetor_de_coordenadas(x_atual,y_atual,vetor);
+
+        int resultado = matriz_de_pixels_visitados[x_atual][y_atual];
+
+        pixels_pretos[x_atual][y_atual] = true;
+        pixels_vermelhos[x_atual][y_atual] = false;
+
+        for(k=0; k<9; k++)
+        {
+            int x_novo = vetor[k].x;
+            int y_novo = vetor[k].y;
+
+            if(o_ponto_e_valido(x_novo, y_novo) == true)
+            {
+                resultado = matriz_de_pixels_visitados[x_novo][y_novo];
+
+                if(resultado == 0)
+                {
+                    //marca pixel adjacente
+                    matriz_de_pixels_visitados[x_novo][y_novo] = 1;
+
+                    NewImage.ReadPixel(x_novo,y_novo,r,g,b);
+
+                    //se o pixel é verde
+                    if( (r == 255 && g == 0 && b == 0) || (r == 0 && g == 0 && b == 0))
+                    {
+                        ponto ponto_novo;
+                        ponto_novo.x = x_novo;
+                        ponto_novo.y = y_novo;
+                        adiciona_ponto_em_lista_aux(ponto_novo);
+                    }
+                }
+            }
+        }
+    }
+
+    //printf(" [CONTADOR = %d --- LISTA = %d] ", contador, contador_lista_aux);
+}
+
 /**
  * Detecta o fundo preto, mas somente após detectar dentinas.
  */
@@ -292,6 +616,8 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
 
         pixels_pretos[x_atual][y_atual] = true;
         pixels_verdes[x_atual][y_atual] = false;
+        NewImage.DrawPixel(x_atual,y_atual,0,0,0);
+        pixels_fundo[x_atual][y_atual] = true;
 
         for(k=0; k<9; k++)
         {
@@ -373,14 +699,14 @@ void remover_bordas_brancas(int x_inicial, int y_inicial)
         NewImage.ReadPixel(x_atual,y_atual,r,g,b);
 
 
-		//se pixel é branco, sinaliza como preto
-		if(r == 255 && g == 255 && b == 255)
-		{
-			pixels_pretos[x_atual][y_atual] = true;
-			pixels_verdes[x_atual][y_atual] = false;
-			pixels_azuis[x_atual][y_atual] = false;
-			pixels_vermelhos[x_atual][y_atual] = false;
-		}
+        //se pixel é branco, sinaliza como preto
+        if(r == 255 && g == 255 && b == 255)
+        {
+            pixels_pretos[x_atual][y_atual] = true;
+            pixels_verdes[x_atual][y_atual] = false;
+            pixels_azuis[x_atual][y_atual] = false;
+            pixels_vermelhos[x_atual][y_atual] = false;
+        }
 
         for(k=0; k<9; k++)
         {
@@ -463,6 +789,24 @@ void imprimir_pixels_azuis()
             if(pixels_azuis[x][y] == true)
             {
                 NewImage.DrawPixel(x,y,0,0,255);
+            }
+        }
+    }
+}
+
+void imprimir_pixels_fundo()
+{
+    //unsigned char r,g,b;
+    int x,y;
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+
+            if(pixels_fundo[x][y] == true)
+            {
+                NewImage.DrawPixel(x,y,0,0,0);
             }
         }
     }
@@ -559,6 +903,47 @@ void destaca_o_que_nao_e_fundo()
     }
 }
 
+void remover_ruidos_para_fundo()
+{
+    int i;
+
+    for(i=0; i<1; i++)
+    {
+        media_bloco();
+    }
+
+    for(i=0; i<26; i++)
+    {
+        media_simples();
+    }
+
+    for(i=0; i<1; i++)
+    {
+        mediana_bloco();
+    }
+
+
+    if(ruidos_extremos == true)
+    {
+        for(i=0; i<8; i++)
+        {
+            media_simples();
+        }
+
+        for(i=0; i<media_simples_extra-2; i++)
+        {
+            media_simples();
+        }
+    }
+    else
+    {
+        for(i=0; i<8; i++)
+        {
+            media_simples();
+        }
+    }
+}
+
 /**
  * Remove os ruídos da imagem.
  */
@@ -581,9 +966,26 @@ void remover_ruidos()
         mediana_bloco();
     }
 
-    for(i=0; i<8; i++)
+
+    if(ruidos_extremos == true)
     {
-        media_simples();
+        for(i=0; i<8; i++)
+        {
+            media_simples();
+        }
+
+        //original não possui decremento no limite
+        for(i=0; i<media_simples_extra; i++)
+        {
+            media_simples();
+        }
+    }
+    else
+    {
+        for(i=0; i<2; i++)
+        {
+            media_simples();
+        }
     }
 }
 
@@ -989,14 +1391,14 @@ void calcular_histograma_imagem_original()
         }
     }
 
-    printf("HISTOGRAMA\n");
+    // printf("HISTOGRAMA\n");
     int soma = 0;
     for(i = 0; i < 255; i++)
     {
         soma = soma + histograma[i];
         //printf("%d = %d\n",i,histograma[i]);
     }
-    printf("total da soma = %d\n\n",soma);
+    //printf("total da soma = %d\n\n",soma);
 
     //cout << "Concluiu Histograma.";
 }
@@ -1060,8 +1462,18 @@ void detectar_dentina_aux()
         }
     }
 
-    //remove ruídos
-    remover_ruidos();
+    if(detectando_fundo == false)
+    {
+        //remove ruídos
+        remover_ruidos();
+    }
+    else
+    {
+        //remove ruídos
+        remover_ruidos_para_fundo();
+    }
+
+
 
     //calcula limiar
     limiar_inferior = 0;
@@ -1120,13 +1532,13 @@ void detectar_pinos()
     int i;
 
     //zera valores da matriz de pixels azuis
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            pixels_azuis[x][y] = false;
-        }
-    }
+    //for(x=0; x<Image.SizeX(); x++)
+    //{
+    //    for(y=0; y<Image.SizeY(); y++)
+    //    {
+    //        pixels_azuis[x][y] = false;
+    //    }
+    //}
 
     //calcula limiar
     limiar_inferior = 0;
@@ -1153,6 +1565,10 @@ void detectar_pinos()
             if(r==0 && g==0 && b==0)
             {
                 pixels_azuis[x][y] = true;
+            }
+            else
+            {
+                pixels_pretos[x][y] = true;
             }
 
         }
@@ -1182,10 +1598,23 @@ void ordena_vetor(int vetor[])
  */
 void init()
 {
-    int r,i;
+    int r,i,x,y;
+
+    detectando_fundo = false;
+
+    int numero_imagem = 1;
+    //10 é uma boa medida extra
+    media_simples_extra = 12;
+    ruidos_extremos = false;
+
+    if(numero_imagem > 5)
+    {
+        ruidos_extremos = true;
+    }
+
+
 
     string nome = "imagens/originais/1.png";
-    //string nome = "imagem_de_teste_01.png";
     string path = "";
 
     nome =  path + nome;
@@ -1246,6 +1675,11 @@ void init()
     {
         pixels_pretos[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
     }
+    pixels_fundo = (bool**) malloc(Image.SizeX() * sizeof (bool*));
+    for (i = 0; i < Image.SizeX(); i++)
+    {
+        pixels_fundo[i] = (bool*) malloc(Image.SizeY() * sizeof (bool));
+    }
     matriz_de_pixels_visitados = (int**) malloc(Image.SizeX() * sizeof (int*));
     for (i = 0; i < Image.SizeX(); i++)
     {
@@ -1276,6 +1710,18 @@ void init()
     kernel_y[2][0] = -1;
     kernel_y[2][1] = -2;
     kernel_y[2][2] = -1;
+
+    //zera valores de pixels
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            pixels_azuis[x][y] = false;
+            pixels_vermelhos[x][y] = false;
+            pixels_verdes[x][y] = false;
+            pixels_pretos[x][y] = false;
+        }
+    }
 }
 
 /**
@@ -1660,9 +2106,7 @@ void keyboard(unsigned char key, int x, int y)
         glutPostRedisplay();
         break;
     case 't':
-        findTeeth();
-        //Mediana();
-        preenche();
+        teste_deteccao();
         glutPostRedisplay();
         break;
     case 'm':
@@ -1699,6 +2143,14 @@ void keyboard(unsigned char key, int x, int y)
         break;
     case 'g':
         detectar_fundo_preto_apos_detectar_dentinas(Image.SizeX()/2,Image.SizeY()/2);
+        glutPostRedisplay();
+        break;//pinta_pixels_pretos_de_vermelho();
+    case 'v':
+        pinta_pixels_pretos_de_vermelho();
+        glutPostRedisplay();
+        break;
+    case 'f':
+        imprimir_pixels_fundo();
         glutPostRedisplay();
         break;
     default:
