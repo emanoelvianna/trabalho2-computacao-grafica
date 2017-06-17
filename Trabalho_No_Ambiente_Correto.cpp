@@ -36,13 +36,36 @@
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
 #define IMAGENS_NA_PASTA 10
+#define ESTRUTURAS_DE_ANALISE 4
+#define DENTINA 0
+#define CANAL 1
+#define PINOS 2
+#define FUNDO 3
 
-//estruturas
+//estrutura ponto
 typedef struct
 {
     int x;
     int y;
 } ponto;
+
+//estrutura estatística
+typedef struct
+{
+    int quantidade_total_de_pixels;
+    int quantidade_de_pixels_vermelhos;
+    int quantidade_de_pixels_verdes;
+    int quantidade_de_pixels_azuis;
+    int quantidade_de_pixels_pretos;
+    int verdadeiros_positivos;
+    int falsos_positivos;
+    int falsos_negativos;
+    double percentural_vermelho;
+    double percentural_verde;
+    double percentural_azul;
+    double percentural_preto;
+    int matriz_de_classificacao[ESTRUTURAS_DE_ANALISE][ESTRUTURAS_DE_ANALISE];
+} estatistica;
 
 //variáveis globais
 ImageClass Image, NewImage;
@@ -66,6 +89,8 @@ bool detectando_fundo;
 int media_extra_para_ruidos_extremos;
 bool precisa_desalocar_memoria;
 int numero_imagem;
+estatistica* estatisticas;
+int matriz_global_de_classificacao[ESTRUTURAS_DE_ANALISE][ESTRUTURAS_DE_ANALISE];
 
 //protótipos de funções
 int main(int argc,char** argv);
@@ -115,16 +140,169 @@ void executa_algoritmo();
 void executa_trabalho();
 void processa_imagem();
 void carrega_imagem_ground_truth();
-void calcula_estatisticas();
+void calcula_estatistica();
 
 using namespace std;
 
 /**
- *
+ * Calcula dados estatísticos da segmentação efetuada.
  */
-void calcula_estatisticas()
+void calcula_estatistica()
 {
-	
+    unsigned char r,g,b;
+    int x,y;
+    int i;
+
+    estatisticas[numero_imagem].quantidade_total_de_pixels = NewImage.SizeX() * NewImage.SizeY();
+
+    //calculando matriz de classificação
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            Image.ReadPixel(x,y,r,g,b);
+
+            //se o pixel foi atribuído ao grupo dentina
+            if(pixels_verdes[x][y] == true)
+            {
+                //se o pixel correto pertence grupo dentina
+                if(r == 0 && g == 255 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][DENTINA] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][DENTINA] + 1;
+                }
+                //se o pixel correto pertence grupo canal
+                if(r == 255 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][CANAL] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][CANAL] + 1;
+                }
+                //se o pixel correto pertence grupo pinos
+                if(r == 0 && g == 0 && b == 255)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][PINOS] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][PINOS] + 1;
+                }
+                //se o pixel correto pertence grupo fundo
+                if(r == 0 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][FUNDO] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][FUNDO] + 1;
+                }
+            }
+            //se o pixel foi atribuído ao grupo canal
+            if(pixels_vermelhos[x][y] == true)
+            {
+                //se o pixel correto pertence grupo dentina
+                if(r == 0 && g == 255 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[CANAL][DENTINA] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[CANAL][DENTINA] + 1;
+                }
+                //se o pixel correto pertence grupo canal
+                if(r == 255 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[CANAL][CANAL] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[CANAL][CANAL] + 1;
+                }
+                //se o pixel correto pertence grupo pinos
+                if(r == 0 && g == 0 && b == 255)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[CANAL][PINOS] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[CANAL][PINOS] + 1;
+                }
+                //se o pixel correto pertence grupo fundo
+                if(r == 0 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[CANAL][FUNDO] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[CANAL][FUNDO] + 1;
+                }
+            }
+            //se o pixel foi atribuído ao grupo pinos
+            if(pixels_azuis[x][y] == true)
+            {
+                //se o pixel correto pertence grupo dentina
+                if(r == 0 && g == 255 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[PINOS][DENTINA] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[PINOS][DENTINA] + 1;
+                }
+                //se o pixel correto pertence grupo canal
+                if(r == 255 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[PINOS][CANAL] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[PINOS][CANAL] + 1;
+                }
+                //se o pixel correto pertence grupo pinos
+                if(r == 0 && g == 0 && b == 255)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[PINOS][PINOS] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[PINOS][PINOS] + 1;
+                }
+                //se o pixel correto pertence grupo fundo
+                if(r == 0 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[PINOS][FUNDO] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[PINOS][FUNDO] + 1;
+                }
+            }
+            //se o pixel foi atribuído ao grupo fundo
+            if(pixels_pretos[x][y] == true)
+            {
+                //se o pixel correto pertence grupo dentina
+                if(r == 0 && g == 255 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][DENTINA] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][DENTINA] + 1;
+                }
+                //se o pixel correto pertence grupo canal
+                if(r == 255 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][CANAL] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][CANAL] + 1;
+                }
+                //se o pixel correto pertence grupo pinos
+                if(r == 0 && g == 0 && b == 255)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][PINOS] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][PINOS] + 1;
+                }
+                //se o pixel correto pertence grupo fundo
+                if(r == 0 && g == 0 && b == 0)
+                {
+                    estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][FUNDO] =
+                        estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][FUNDO] + 1;
+                }
+            }
+        }
+    }
+
+    printf("\tDENTINA\tCANAL\tPINOS\tFUNDO");
+	printf("\n");
+    printf("DENTINA");
+    for(i=0; i<ESTRUTURAS_DE_ANALISE; i++)
+    {
+        printf("\t%d",estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][i]);
+    }
+	printf("\n");
+    printf("CANAL");
+    for(i=0; i<ESTRUTURAS_DE_ANALISE; i++)
+    {
+        printf("\t%d",estatisticas[numero_imagem].matriz_de_classificacao[CANAL][i]);
+    }
+	printf("\n");
+    printf("PINOS");
+    for(i=0; i<ESTRUTURAS_DE_ANALISE; i++)
+    {
+        printf("\t%d",estatisticas[numero_imagem].matriz_de_classificacao[PINOS][i]);
+    }
+	printf("\n");
+    printf("FUNDO");
+    for(i=0; i<ESTRUTURAS_DE_ANALISE; i++)
+    {
+        printf("\t%d",estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][i]);
+    }
+	printf("\n");
 }
 
 /**
@@ -132,7 +310,7 @@ void calcula_estatisticas()
  */
 void carrega_imagem_ground_truth()
 {
-	int r;
+    int r;
 
     string nome = ".png";
     string path = "imagens/segmentadas/";
@@ -154,6 +332,8 @@ void processa_imagem()
 {
     inicializa_estruturas();
     executa_algoritmo();
+    carrega_imagem_ground_truth();
+    calcula_estatistica();
 }
 
 /**
@@ -161,17 +341,17 @@ void processa_imagem()
  */
 void desaloca_memoria()
 {
-	free(r_matrix_aux);
-	free(g_matrix_aux);
-	free(b_matrix_aux);
-	free(matrix_aux);
-	free(pixels_azuis);
-	free(pixels_verdes);
-	free(pixels_vermelhos);
-	free(pixels_pretos);
-	free(pixels_fundo);
-	free(matriz_de_pixels_visitados);
-	free(lista_busca_aux);
+    free(r_matrix_aux);
+    free(g_matrix_aux);
+    free(b_matrix_aux);
+    free(matrix_aux);
+    free(pixels_azuis);
+    free(pixels_verdes);
+    free(pixels_vermelhos);
+    free(pixels_pretos);
+    free(pixels_fundo);
+    free(matriz_de_pixels_visitados);
+    free(lista_busca_aux);
 }
 
 /**
@@ -317,10 +497,11 @@ void inicializa_estruturas()
 void executa_trabalho()
 {
     for(numero_imagem=0; numero_imagem<IMAGENS_NA_PASTA; numero_imagem++)
-	{
-		processa_imagem();
-		carrega_imagem_ground_truth();
-	}
+    {
+        processa_imagem();
+        carrega_imagem_ground_truth();
+        calcula_estatistica();
+    }
 }
 
 /**
@@ -1650,8 +1831,38 @@ void ordena_vetor(int vetor[])
  */
 void init()
 {
+    int i;
+
     precisa_desalocar_memoria = false;
     numero_imagem = 0;
+
+    estatisticas = (estatistica*) malloc(IMAGENS_NA_PASTA * sizeof (estatistica));
+
+    for(i=0; i<IMAGENS_NA_PASTA; i++)
+    {
+        estatisticas[i].quantidade_total_de_pixels = 0;
+        estatisticas[i].quantidade_de_pixels_vermelhos = 0;
+        estatisticas[i].quantidade_de_pixels_verdes = 0;
+        estatisticas[i].quantidade_de_pixels_azuis = 0;
+        estatisticas[i].quantidade_de_pixels_pretos = 0;
+        estatisticas[i].verdadeiros_positivos = 0;
+        estatisticas[i].falsos_positivos = 0;
+        estatisticas[i].falsos_negativos = 0;
+        estatisticas[i].percentural_vermelho = 0.0;
+        estatisticas[i].percentural_verde = 0.0;
+        estatisticas[i].percentural_azul = 0.0;
+        estatisticas[i].percentural_preto = 0.0;
+
+        int j,k;
+
+        for(j=0; j<ESTRUTURAS_DE_ANALISE; j++)
+        {
+            for(k=0; k<ESTRUTURAS_DE_ANALISE; k++)
+            {
+                estatisticas[i].matriz_de_classificacao[j][k] = 0;
+            }
+        }
+    }
 }
 
 /**
@@ -1788,23 +1999,23 @@ void keyboard(unsigned char key, int x, int y)
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
         glutPostRedisplay();
         break;
-	//escolhe imagem anterior
+    //escolhe imagem anterior
     case 'b':
-		numero_imagem--;
+        numero_imagem--;
         if(numero_imagem < 0)
-		{
-			numero_imagem = 0;
-		}
-		printf("IMAGEM ESCOLHIDA = %d\n",numero_imagem);
+        {
+            numero_imagem = 0;
+        }
+        printf("IMAGEM ESCOLHIDA = %d\n",numero_imagem);
         break;
-	//escolhe imagem seguinte
+    //escolhe imagem seguinte
     case 'n':
         numero_imagem++;
         if(numero_imagem >= IMAGENS_NA_PASTA)
-		{
-			numero_imagem = IMAGENS_NA_PASTA-1;
-		}
-		printf("IMAGEM ESCOLHIDA = %d\n",numero_imagem);
+        {
+            numero_imagem = IMAGENS_NA_PASTA-1;
+        }
+        printf("IMAGEM ESCOLHIDA = %d\n",numero_imagem);
         break;
     //calcula filtro de sobel
     case 's':
@@ -1861,7 +2072,7 @@ void keyboard(unsigned char key, int x, int y)
         processa_imagem();
         glutPostRedisplay();
         break;
-	//executa o trabalho o algoritmo para todas as imagens
+    //executa o trabalho o algoritmo para todas as imagens
     case 'z':
         carrega_imagem_ground_truth();
         glutPostRedisplay();
