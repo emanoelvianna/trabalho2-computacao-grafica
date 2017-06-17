@@ -44,38 +44,33 @@ typedef struct
 //variáveis globais
 ImageClass Image, NewImage;
 int limiar_inferior, limiar_superior;
-int histograma[255];
 unsigned char** r_matrix_aux;
 unsigned char** g_matrix_aux;
 unsigned char** b_matrix_aux;
 unsigned char** matrix_aux;
 int kernel_x[3][3];
 int kernel_y[3][3];
-const int LIMIAR = 120;
-const int TEETH = 59;
-const int PINOS = 120;
-int meuVetor[9];
-int branco = 0;
-int preto = 0;
-bool** pixels_azuis;
-bool** pixels_verdes;
-bool** pixels_vermelhos;
-bool** pixels_pretos;
 bool** pixels_fundo;
+bool** pixels_pretos;
+bool** pixels_vermelhos;
+bool** pixels_verdes;
+bool** pixels_azuis;
 int** matriz_de_pixels_visitados;
 ponto* lista_busca_aux;
 int contador_lista_aux;
 bool ruidos_extremos;
-int media_simples_extra;
 bool detectando_fundo;
+int media_extra_para_ruidos_extremos;
 
 //protótipos de funções
-void sobel();
+int main(int argc,char** argv);
+void init();
+void reshape(int w,int h);
+void display(void);
+void keyboard(unsigned char key,int x,int y);
 void inicializa_imagem_de_trabalho();
 void armazena_imagem_em_matriz_auxiliar();
 void carrega_imagem_de_matriz_auxiliar();
-void calcula_limiar();
-void calcular_histograma();
 void mediana_simples();
 int mediana_simples_aux(int x,int y);
 void mediana_bloco();
@@ -84,86 +79,58 @@ void media_simples();
 int media_simples_aux(int x,int y);
 void media_bloco();
 int media_bloco_aux(int x,int y);
-void ordena_vetor(int vetor[]);
-void remover_ruidos();
-void destaca_o_que_nao_e_fundo();
-void detectar_dentina_aux();
-void detectar_dentina();
-void detectar_pinos();
-void imprimir_pixels_azuis();
-void imprimir_pixels_vermelhos();
-void imprimir_pixels_verdes();
-void imprimir_pixels_pretos();
+void calcula_limiar();
+void calcular_histograma_da_imagem_modificada();
 void imprimir_pixels_fundo();
+void imprimir_pixels_pretos();
+void imprimir_pixels_vermelhos();
+void armazenar_pixels_vermelhos();
+void imprimir_pixels_verdes();
+void imprimir_pixels_azuis();
 void imprimir_todos_os_pixels();
-void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial,int y_inicial);
+void salvar_pixels();
+void sobel();
+void ordena_vetor(int vetor[]);
 void adiciona_ponto_em_lista_aux(ponto ponto_aux);
 ponto remove_ponto_em_lista_aux();
-bool o_ponto_e_valido(int x,int y);
-void detectar_dentinas_e_pinos();
-void remover_bordas_brancas(int x_inicial, int y_inicial);
-void pinta_pixels_brancos_de_vermelho();
-void pinta_pixels_pretos_de_vermelho();
-void teste_deteccao();
-void pintar_fundo_com_parametros(int x_inicial, int y_inicial);
-void pintar_fundo_preto_e_destacar_canais_inferiores(int x_inicial, int y_inicial);
-void remover_ruidos_para_fundo();
-void salvar_pixels();
+bool verifica_se_ponto_e_valido(int x,int y);
+void remover_ruidos();
+void remover_ruidos_para_determinar_fundo();
+void detectar_pinos();
+void detectar_dentina();
+void detectar_dentina_aux();
+void reduzir_ruidos_ao_maximo();
+void segmenta_fundo_de_verde_para_preto(int x_inicial,int y_inicial);
+void segmenta_fundo_de_vermelho_para_preto(int x_inicial,int y_inicial);
+void segmenta_fundo_de_preto_para_branco(int x_inicial,int y_inicial);
+void pinta_de_vermelho_os_pixels_com_limiar_baixo();
+void executa_algoritmo();
+void executar_trabalho();
 
 using namespace std;
 
-void salvar_pixels()
+/**
+ * Executa o algoritmo de detecção para todas as imagens
+ */
+void executar_trabalho()
 {
-	unsigned char r,g,b;
-    int x,y;
-
-	for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-			pixels_fundo[x][y] = true;
-            pixels_pretos[x][y] = false;
-			pixels_vermelhos[x][y] = false;
-			pixels_verdes[x][y] = false;
-			pixels_azuis[x][y] = false;
-        }
-    }
-
-	for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            NewImage.ReadPixel(x,y,r,g,b);
-
-            if(r==0 && g==0 && b==0)
-            {
-                pixels_pretos[x][y] = true;
-            }
-			if(r==255 && g==0 && b==0)
-            {
-                pixels_vermelhos[x][y] = true;
-            }
-			if(r==0 && g==255 && b==0)
-            {
-                pixels_verdes[x][y] = true;
-            }
-			if(r==0 && g==0 && b==255)
-            {
-                pixels_azuis[x][y] = true;
-            }
-        }
-    }
+    //TODO
 }
 
-void teste_deteccao()
+/**
+ * Executa o algoritmo de segmentação da imagem.
+ */
+void executa_algoritmo()
 {
     unsigned char r,g,b;
     int x,y;
 
-    //elementos do fundo
+    //reduz ao maximo os ruidos da imagem
     detectando_fundo = true;
-    detectar_dentinas_e_pinos();
+    reduzir_ruidos_ao_maximo();
     detectando_fundo = false;
+
+    //define como fundo todos os pixels pretos
     for(x=0; x<Image.SizeX(); x++)
     {
         for(y=0; y<Image.SizeY(); y++)
@@ -184,9 +151,7 @@ void teste_deteccao()
         }
     }
 
-
-
-    inicializa_imagem_de_trabalho();
+    //inicializa_imagem_de_trabalho();
     detectar_pinos();
 
     inicializa_imagem_de_trabalho();
@@ -213,27 +178,25 @@ void teste_deteccao()
         }
     }
 
-    pinta_pixels_pretos_de_vermelho();
-    pintar_fundo_com_parametros(100,100);
+    //pinta de vermelho os pixels de limiar baixo
+    pinta_de_vermelho_os_pixels_com_limiar_baixo();
+
+    //remove pixels vermelhos da região do fundo
+    segmenta_fundo_de_vermelho_para_preto(100,100);
+
+    //imprime pixels pretos em cima dos pixels vermelhos fora dos canais
     imprimir_pixels_pretos();
 
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            NewImage.ReadPixel(x,y,r,g,b);
+    //armazena os pixels vermelhos definitivos
+    armazenar_pixels_vermelhos();
 
-            if(r==255 && g==0 && b==0)
-            {
-                pixels_vermelhos[x][y] = true;
-            }
-        }
-    }
-
+    //imprime pixels verdes
     imprimir_pixels_verdes();
 
-    pintar_fundo_preto_e_destacar_canais_inferiores(100,100);
+    //segmenta fundo de preto para branco
+    segmenta_fundo_de_preto_para_branco(100,100);
 
+    //armazena pixels pretos restantes que deveriam ser canais
     for(x=0; x<Image.SizeX(); x++)
     {
         for(y=0; y<Image.SizeY(); y++)
@@ -247,42 +210,24 @@ void teste_deteccao()
         }
     }
 
+    //detecta pinos
     detectar_pinos();
-    //imprimir_pixels_pretos();
 
-
+    //imprime as configurações finais dos pixels
     imprimir_pixels_pretos();
     imprimir_pixels_verdes();
-    imprimir_pixels_azuis();
     imprimir_pixels_fundo();
     imprimir_pixels_vermelhos();
-
-	armazena_imagem_em_matriz_auxiliar();
-	salvar_pixels();
-}
-
-/**
- * Sequência de passos que detecta as dentinas e pinos da imagem.
- */
-void detectar_dentinas_e_pinos()
-{
-    //printf("[DETECTANDO DENTINAS > ");
-    detectar_dentina();
-    //printf("DETECTANDO PINOS > ");
-    detectar_pinos();
-    imprimir_pixels_verdes();
     imprimir_pixels_azuis();
-    //printf("DETECTANDO FUNDO > ");
-    detectar_fundo_preto_apos_detectar_dentinas(100,100);
-    detectar_fundo_preto_apos_detectar_dentinas(Image.SizeX()/2,Image.SizeY()/2);
-    //imprimir_pixels_pretos();
-    //printf("CONCLUIDO]\n");
+
+    armazena_imagem_em_matriz_auxiliar();
+    salvar_pixels();
 }
 
 /**
- * Armazena coordenadas de pixels brancos na matriz de mpixels vermelhos.
+ * Lê os pixels da imagem e armazena pixels vermelho.
  */
-void pinta_pixels_brancos_de_vermelho()
+void armazenar_pixels_vermelhos()
 {
     unsigned char r,g,b;
     int x,y;
@@ -293,7 +238,7 @@ void pinta_pixels_brancos_de_vermelho()
         {
             NewImage.ReadPixel(x,y,r,g,b);
 
-            if(r == 255 && g == 255 && b == 255)
+            if(r==255 && g==0 && b==0)
             {
                 pixels_vermelhos[x][y] = true;
             }
@@ -301,7 +246,69 @@ void pinta_pixels_brancos_de_vermelho()
     }
 }
 
-void pinta_pixels_pretos_de_vermelho()
+/**
+ * Lê os pixels da imagem e armazena todos os pixels de acordo com suas cores.
+ */
+void salvar_pixels()
+{
+    unsigned char r,g,b;
+    int x,y;
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            pixels_fundo[x][y] = true;
+            pixels_pretos[x][y] = false;
+            pixels_vermelhos[x][y] = false;
+            pixels_verdes[x][y] = false;
+            pixels_azuis[x][y] = false;
+        }
+    }
+
+    for(x=0; x<Image.SizeX(); x++)
+    {
+        for(y=0; y<Image.SizeY(); y++)
+        {
+            NewImage.ReadPixel(x,y,r,g,b);
+
+            if(r==0 && g==0 && b==0)
+            {
+                pixels_pretos[x][y] = true;
+            }
+            if(r==255 && g==0 && b==0)
+            {
+                pixels_vermelhos[x][y] = true;
+            }
+            if(r==0 && g==255 && b==0)
+            {
+                pixels_verdes[x][y] = true;
+            }
+            if(r==0 && g==0 && b==255)
+            {
+                pixels_azuis[x][y] = true;
+            }
+        }
+    }
+}
+
+/**
+ * Sequência de passos que reduz ao máximo os ruídos da imagem.
+ */
+void reduzir_ruidos_ao_maximo()
+{
+    detectar_dentina();
+    detectar_pinos();
+    imprimir_pixels_verdes();
+    imprimir_pixels_azuis();
+    segmenta_fundo_de_verde_para_preto(100,100);
+    segmenta_fundo_de_verde_para_preto(Image.SizeX()/2,Image.SizeY()/2);
+}
+
+/**
+ * Pinta de vermelho os pixels com limiar baixo.
+ */
+void pinta_de_vermelho_os_pixels_com_limiar_baixo()
 {
     unsigned char r,g,b;
     int x,y;
@@ -323,7 +330,7 @@ void pinta_pixels_pretos_de_vermelho()
 /**
  * Verifica se um ponto x,y é válido.
  */
-bool o_ponto_e_valido(int x, int y)
+bool verifica_se_ponto_e_valido(int x, int y)
 {
     if(x >= 0 && x < Image.SizeX())
     {
@@ -357,8 +364,6 @@ ponto remove_ponto_em_lista_aux()
     }
 
     contador_lista_aux--;
-
-    //printf("CONTADOR DA LISTA AUX: %d\n",contador_lista_aux);
 
     return ponto_aux;
 }
@@ -406,7 +411,10 @@ void vetor_de_coordenadas(int x, int y, ponto vetor[9])
     vetor[8].y = y+1;
 }
 
-void pintar_fundo_preto_e_destacar_canais_inferiores(int x_inicial, int y_inicial)
+/**
+ * Identifica pixels pretos do fundo e os pinta de branco.
+ */
+void segmenta_fundo_de_preto_para_branco(int x_inicial, int y_inicial)
 {
     int contador = 0;
     unsigned char r,g,b;
@@ -461,7 +469,7 @@ void pintar_fundo_preto_e_destacar_canais_inferiores(int x_inicial, int y_inicia
             int x_novo = vetor[k].x;
             int y_novo = vetor[k].y;
 
-            if(o_ponto_e_valido(x_novo, y_novo) == true)
+            if(verifica_se_ponto_e_valido(x_novo, y_novo) == true)
             {
                 resultado = matriz_de_pixels_visitados[x_novo][y_novo];
 
@@ -472,8 +480,8 @@ void pintar_fundo_preto_e_destacar_canais_inferiores(int x_inicial, int y_inicia
 
                     NewImage.ReadPixel(x_novo,y_novo,r,g,b);
 
-                    //se o pixel é verde
-                    if( (r == 0 && g == 0 && b == 0) || (r == 0 && g == 0 && b == 0))
+                    //se o pixel é preto
+                    if(r == 0 && g == 0 && b == 0)
                     {
                         ponto ponto_novo;
                         ponto_novo.x = x_novo;
@@ -488,7 +496,10 @@ void pintar_fundo_preto_e_destacar_canais_inferiores(int x_inicial, int y_inicia
     //printf(" [CONTADOR = %d --- LISTA = %d] ", contador, contador_lista_aux);
 }
 
-void pintar_fundo_com_parametros(int x_inicial, int y_inicial)
+/**
+ * Identifica pixels vermelhos do fundo e os pinta de preto.
+ */
+void segmenta_fundo_de_vermelho_para_preto(int x_inicial, int y_inicial)
 {
     int contador = 0;
     unsigned char r,g,b;
@@ -543,7 +554,7 @@ void pintar_fundo_com_parametros(int x_inicial, int y_inicial)
             int x_novo = vetor[k].x;
             int y_novo = vetor[k].y;
 
-            if(o_ponto_e_valido(x_novo, y_novo) == true)
+            if(verifica_se_ponto_e_valido(x_novo, y_novo) == true)
             {
                 resultado = matriz_de_pixels_visitados[x_novo][y_novo];
 
@@ -571,9 +582,9 @@ void pintar_fundo_com_parametros(int x_inicial, int y_inicial)
 }
 
 /**
- * Detecta o fundo preto, mas somente após detectar dentinas.
+ * Identifica pixels verdes do fundo e os pinta de preto.
  */
-void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
+void segmenta_fundo_de_verde_para_preto(int x_inicial, int y_inicial)
 {
     int contador = 0;
     unsigned char r,g,b;
@@ -624,7 +635,7 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
             int x_novo = vetor[k].x;
             int y_novo = vetor[k].y;
 
-            if(o_ponto_e_valido(x_novo, y_novo) == true)
+            if(verifica_se_ponto_e_valido(x_novo, y_novo) == true)
             {
                 resultado = matriz_de_pixels_visitados[x_novo][y_novo];
 
@@ -638,95 +649,6 @@ void detectar_fundo_preto_apos_detectar_dentinas(int x_inicial, int y_inicial)
 
                     //se o pixel é verde
                     if( (r == 0 && g == 255 && b == 0) || (r == 0 && g == 0 && b == 0))
-                    {
-                        ponto ponto_novo;
-                        ponto_novo.x = x_novo;
-                        ponto_novo.y = y_novo;
-                        adiciona_ponto_em_lista_aux(ponto_novo);
-                    }
-                }
-            }
-        }
-    }
-
-    //printf(" [CONTADOR = %d --- LISTA = %d] ", contador, contador_lista_aux);
-}
-
-/**
- * Varre o fundo da imagem removendo bordas brancas.
- */
-void remover_bordas_brancas(int x_inicial, int y_inicial)
-{
-    int contador = 0;
-    unsigned char r,g,b;
-    int x,y;
-
-    contador_lista_aux = 0;
-
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            matriz_de_pixels_visitados[x][y] = 0;
-        }
-    }
-
-    //cria ponto inicial
-    ponto ponto_inicial;
-    ponto_inicial.x = x_inicial;
-    ponto_inicial.y = y_inicial;
-
-    adiciona_ponto_em_lista_aux(ponto_inicial);
-
-    matriz_de_pixels_visitados[ponto_inicial.x][ponto_inicial.y] = 1;
-
-    while(contador_lista_aux > 0)
-    {
-        contador++;
-        int k;
-
-        ponto ponto_atual = remove_ponto_em_lista_aux();
-
-        int x_atual = ponto_atual.x;
-        int y_atual = ponto_atual.y;
-
-        ponto vetor[9];
-
-        vetor_de_coordenadas(x_atual,y_atual,vetor);
-
-        int resultado = matriz_de_pixels_visitados[x_atual][y_atual];
-
-        NewImage.ReadPixel(x_atual,y_atual,r,g,b);
-
-
-        //se pixel é branco, sinaliza como preto
-        if(r == 255 && g == 255 && b == 255)
-        {
-            pixels_pretos[x_atual][y_atual] = true;
-            pixels_verdes[x_atual][y_atual] = false;
-            pixels_azuis[x_atual][y_atual] = false;
-            pixels_vermelhos[x_atual][y_atual] = false;
-        }
-
-        for(k=0; k<9; k++)
-        {
-            int x_novo = vetor[k].x;
-            int y_novo = vetor[k].y;
-
-            if(o_ponto_e_valido(x_novo, y_novo) == true)
-            {
-                resultado = matriz_de_pixels_visitados[x_novo][y_novo];
-
-                //se este pixel ainda não foi visitado
-                if(resultado == 0)
-                {
-                    //marca pixel adjacente
-                    matriz_de_pixels_visitados[x_novo][y_novo] = 1;
-
-                    NewImage.ReadPixel(x_novo,y_novo,r,g,b);
-
-                    //se o pixel é verde
-                    if( (r == 255 && g == 255 && b == 255) || (r == 0 && g == 0 && b == 0))
                     {
                         ponto ponto_novo;
                         ponto_novo.x = x_novo;
@@ -794,6 +716,9 @@ void imprimir_pixels_azuis()
     }
 }
 
+/**
+ * Desenha pixels do fundo.
+ */
 void imprimir_pixels_fundo()
 {
     //unsigned char r,g,b;
@@ -877,33 +802,9 @@ void imprimir_pixels_pretos()
 }
 
 /**
- * Pinta de vermelho tudo que não é fundo.
- * Isso ajuda a identificar se existem bordas fechadas.
+ * Remove ruídos objetivando o fundo da imagem.
  */
-void destaca_o_que_nao_e_fundo()
-{
-    unsigned char r,g,b;
-    int x,y;
-
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            NewImage.ReadPixel(x,y,r,g,b);
-
-            if( (r <= 0) || (g <= 0) || (b <= 0) )
-            {
-                NewImage.DrawPixel(x,y,255,255,255);
-            }
-            else
-            {
-                NewImage.DrawPixel(x,y,0,255,0);
-            }
-        }
-    }
-}
-
-void remover_ruidos_para_fundo()
+void remover_ruidos_para_determinar_fundo()
 {
     int i;
 
@@ -922,7 +823,6 @@ void remover_ruidos_para_fundo()
         mediana_bloco();
     }
 
-
     if(ruidos_extremos == true)
     {
         for(i=0; i<8; i++)
@@ -930,7 +830,7 @@ void remover_ruidos_para_fundo()
             media_simples();
         }
 
-        for(i=0; i<media_simples_extra-2; i++)
+        for(i=0; i<media_extra_para_ruidos_extremos-2; i++)
         {
             media_simples();
         }
@@ -966,7 +866,6 @@ void remover_ruidos()
         mediana_bloco();
     }
 
-
     if(ruidos_extremos == true)
     {
         for(i=0; i<8; i++)
@@ -974,8 +873,7 @@ void remover_ruidos()
             media_simples();
         }
 
-        //original não possui decremento no limite
-        for(i=0; i<media_simples_extra; i++)
+        for(i=0; i<media_extra_para_ruidos_extremos; i++)
         {
             media_simples();
         }
@@ -1096,7 +994,7 @@ void carrega_imagem_de_matriz_auxiliar()
 }
 
 /**
- * Copia os pixeis da imagem original para a imagem de trabalho.
+ * Copia os pixels da imagem original para a imagem de trabalho.
  */
 void inicializa_imagem_de_trabalho()
 {
@@ -1367,52 +1265,15 @@ void calcula_limiar()
 }
 
 /**
- * Calcula histograma da imagem.
+ * Calcula o histograma da imagem modificada.
  */
-void calcular_histograma_imagem_original()
-{
-    //cout << "Iniciou Histograma...";
-
-    unsigned char r,g,b;
-    int x,y;
-    int i;
-
-    for(i = 0; i < 255; i++)
-    {
-        histograma[i] = 0;
-    }
-
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            Image.ReadPixel(x,y,r,g,b);
-            histograma[r] = histograma[r] + 1;
-        }
-    }
-
-    // printf("HISTOGRAMA\n");
-    int soma = 0;
-    for(i = 0; i < 255; i++)
-    {
-        soma = soma + histograma[i];
-        //printf("%d = %d\n",i,histograma[i]);
-    }
-    //printf("total da soma = %d\n\n",soma);
-
-    //cout << "Concluiu Histograma.";
-}
-
-/**
- * Calcula histograma da imagem modificada.
- */
-void calcular_histograma_imagem_modificada()
+void calcular_histograma_da_imagem_modificada()
 {
     int x, y, i = 0;
-    int frequencia[256];
+    int frequencia[255];
 
     /** preenche o vetor auxiliar **/
-    for(i = 0; i < 256; i++)
+    for(i = 0; i < 255; i++)
     {
         frequencia[i] = 0;
     }
@@ -1428,7 +1289,7 @@ void calcular_histograma_imagem_modificada()
     }
 
     /** imprimindo os valores de frequencia de cada cor **/
-    for(i = 0; i < 256; i++)
+    for(i = 0; i < 255; i++)
     {
         cout << i << "=" << frequencia[i] << endl;
     }
@@ -1470,10 +1331,8 @@ void detectar_dentina_aux()
     else
     {
         //remove ruídos
-        remover_ruidos_para_fundo();
+        remover_ruidos_para_determinar_fundo();
     }
-
-
 
     //calcula limiar
     limiar_inferior = 0;
@@ -1523,22 +1382,11 @@ void detectar_dentina_aux()
  */
 void detectar_pinos()
 {
-    //printf("DETECTANDO PINOS -> ");
-
     inicializa_imagem_de_trabalho();
 
     unsigned char r,g,b;
     int x,y;
     int i;
-
-    //zera valores da matriz de pixels azuis
-    //for(x=0; x<Image.SizeX(); x++)
-    //{
-    //    for(y=0; y<Image.SizeY(); y++)
-    //    {
-    //        pixels_azuis[x][y] = false;
-    //    }
-    //}
 
     //calcula limiar
     limiar_inferior = 0;
@@ -1573,8 +1421,6 @@ void detectar_pinos()
 
         }
     }
-
-    //printf("CONCLUIDO\n");
 }
 /**
  * Ordena um vetor.
@@ -1602,9 +1448,10 @@ void init()
 
     detectando_fundo = false;
 
-    int numero_imagem = 1;
-    //10 é uma boa medida extra
-    media_simples_extra = 12;
+    //número da imagem a ser lida
+    int numero_imagem = 10;
+
+    media_extra_para_ruidos_extremos = 12;
     ruidos_extremos = false;
 
     if(numero_imagem > 5)
@@ -1612,9 +1459,7 @@ void init()
         ruidos_extremos = true;
     }
 
-
-
-    string nome = "imagens/originais/1.png";
+    string nome = "imagens/originais/10.png";
     string path = "";
 
     nome =  path + nome;
@@ -1627,12 +1472,6 @@ void init()
     //limiares iniciais
     limiar_inferior = 0;
     limiar_superior = 70;
-
-    //inicializa histograma
-    for(i = 0; i < 255; i++)
-    {
-        histograma[i] = 0;
-    }
 
     //aloca matrizes auxiliares que armazenam pixels
     r_matrix_aux = (unsigned char**) malloc(Image.SizeX() * sizeof (unsigned char*));
@@ -1686,8 +1525,8 @@ void init()
         matriz_de_pixels_visitados[i] = (int*) malloc(Image.SizeY() * sizeof (int));
     }
 
+    //inicializa lista de auxílio para a execução de algoritmos de segmentação
     int size_aux = Image.SizeX() * Image.SizeY();
-    //aloca lista de auxílio para a execução algoritmos de segmentação
     lista_busca_aux = (ponto*) malloc(size_aux * sizeof (ponto));
     contador_lista_aux = 0;
 
@@ -1711,7 +1550,7 @@ void init()
     kernel_y[2][1] = -2;
     kernel_y[2][2] = -1;
 
-    //zera valores de pixels
+    //zera valores de matrizes
     for(x=0; x<Image.SizeX(); x++)
     {
         for(y=0; y<Image.SizeY(); y++)
@@ -1720,6 +1559,8 @@ void init()
             pixels_vermelhos[x][y] = false;
             pixels_verdes[x][y] = false;
             pixels_pretos[x][y] = false;
+            pixels_fundo[x][y] = false;
+            matriz_de_pixels_visitados[x][y] = 0;
         }
     }
 }
@@ -1739,13 +1580,12 @@ void reshape( int w, int h )
     //set the clipping volume
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
 }
 
 /**
  * Exibe imagem.
  */
-void display( void )
+void display(void)
 {
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Fundo de tela preto
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1774,219 +1614,6 @@ void display( void )
 
     //mostra a tela OpenGL
     glutSwapBuffers();
-}
-
-void OrdenaVetor(int window[])
-{
-    branco = 0;
-    preto = 0;
-    int temp, i, j;
-    for(i = 0; i < 9; i++)
-    {
-        temp = window[i];
-
-        if(window[i] == 255)
-        {
-            branco++;
-        }
-        else
-        {
-            preto++;
-        }
-
-        for(j = i-1; j >= 0 && temp < window[j]; j--)
-        {
-            window[j+1] = window[j];
-        }
-        window[j+1] = temp;
-    }
-}
-
-void MontaVetor(int Px, int Py, int Vetor[9])
-{
-    int x = Px;
-    int y = Py;
-
-    Vetor[0] = NewImage.GetPointIntensity(x - 1,y-1);
-    Vetor[1] = NewImage.GetPointIntensity(x - 1,y);
-    Vetor[2] = NewImage.GetPointIntensity(x - 1,y+1);
-    Vetor[3] = NewImage.GetPointIntensity(x,y-1);
-    Vetor[4] = NewImage.GetPointIntensity(x,y);
-    Vetor[5] = NewImage.GetPointIntensity(x,y+1);
-    Vetor[6] = NewImage.GetPointIntensity(x + 1,y-1);
-    Vetor[7] = NewImage.GetPointIntensity(x + 1,y);
-    Vetor[8] = NewImage.GetPointIntensity(x + 1,y+1);
-}
-
-void minha_mediana()
-{
-    //cout << "-- iniciou mediana..." << endl;
-    int x;
-    int y;
-    for(x = 1; x < Image.SizeX() - 1; x++)
-    {
-        for(y = 1; y < Image.SizeY() - 1; y++)
-        {
-            MontaVetor(x, y, meuVetor);
-            OrdenaVetor(meuVetor);
-            NewImage.DrawPixel(x, y, meuVetor[4], meuVetor[4], meuVetor[4]);
-        }
-    }
-    //cout << "-- concluiu mediana." << endl;
-}
-
-void efetuaPreenchimento(int x, int y, int vetor[9])
-{
-    int i;
-    for(i = 0; i < 9; i++)
-    {
-        if(vetor[i] == 255)
-        {
-            branco++;
-        }
-        else
-        {
-            preto++;
-        }
-    }
-    if(branco > preto)
-    {
-        NewImage.DrawPixel(x - 1,y-1, 255,255,255);
-        NewImage.DrawPixel(x - 1,y, 255,255,255);
-        NewImage.DrawPixel(x - 1,y+1, 255,255,255);
-        NewImage.DrawPixel(x,y-1, 255,255,255);
-        NewImage.DrawPixel(x,y, 255,255,255);
-        NewImage.DrawPixel(x,y+1, 255,255,255);
-        NewImage.DrawPixel(x + 1,y-1, 255,255,255);
-        NewImage.DrawPixel(x + 1,y, 255,255,255);
-        NewImage.DrawPixel(x + 1,y+1, 255,255,255);
-    }
-    else
-    {
-        NewImage.DrawPixel(x - 1,y-1,0,0,0);
-        NewImage.DrawPixel(x - 1,y,0,0,0);
-        NewImage.DrawPixel(x - 1,y+1,0,0,0);
-        NewImage.DrawPixel(x,y-1,0,0,0);
-        NewImage.DrawPixel(x,y,0,0,0);
-        NewImage.DrawPixel(x,y+1,0,0,0);
-        NewImage.DrawPixel(x + 1,y-1, 0,0,0);
-        NewImage.DrawPixel(x + 1,y,0,0,0);
-        NewImage.DrawPixel(x + 1,y+1,0,0,0);
-
-    }
-}
-
-void preenche()
-{
-    //cout << "Iniciou Preenche..." << endl;
-    int x;
-    int y;
-
-    for(x = 1; x < Image.SizeX() - 1; x = x + 3)
-    {
-        for(y = 1; y < Image.SizeY() - 1; y = y + 3)
-        {
-
-            MontaVetor(x,y,meuVetor);
-            efetuaPreenchimento(x,y,meuVetor);
-        }
-    }
-    //cout << "Concluiu Preenche." << endl;
-}
-
-void findTeeth()
-{
-    unsigned char r,g,b;
-    int x,y;
-    int i;
-    //cout << "Iniciou FINDING TEETH.....";
-    for(x=0; x<Image.SizeX(); x++)
-    {
-        for(y=0; y<Image.SizeY(); y++)
-        {
-            i = NewImage.GetPointIntensity(x,y); // VERIFICA O TOM DE CINZA DA IMAGEM
-            NewImage.ReadPixel(x,y,r,g,b);
-
-            if (TEETH < i && i < 77)
-            {
-                NewImage.DrawPixel(x, y,255,255,255);  // exibe um ponto BRANCO na imagem
-            }
-            else NewImage.DrawPixel(x, y, 0,0,0); // exibe um ponto PRETO na imagem
-
-        }
-    }
-    //cout << "Concluiu FINDING TEETH." << endl;
-
-
-}
-
-/** sequencia de metodos para remover ruidos da imagem **/
-void run_1()
-{
-    inicializa_imagem_de_trabalho();
-    media_bloco();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    mediana_bloco();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-}
-
-void run_2()
-{
-    //inicializa_imagem_de_trabalho();
-    media_bloco();
-    media_bloco();
-    mediana_simples();
-    mediana_bloco();
-    mediana_bloco();
-    mediana_bloco();
-    media_simples();
-    media_bloco();
-    media_simples();
-    media_bloco();
-    mediana_simples();
-    mediana_simples();
-    mediana_bloco();
-    mediana_simples();
-    minha_mediana();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    media_simples();
-    //sobel();
 }
 
 /**
@@ -2030,12 +1657,7 @@ void keyboard(unsigned char key, int x, int y)
         break;
     //calcula histograma
     case '5':
-        calcular_histograma_imagem_original();
-        glutPostRedisplay();
-        break;
-    //calcula mediana do histograma
-    case '6':
-        //TODO
+        calcular_histograma_da_imagem_modificada();
         glutPostRedisplay();
         break;
     //calcula limiar
@@ -2069,7 +1691,7 @@ void keyboard(unsigned char key, int x, int y)
     case 'e':
         limiar_superior = limiar_superior - 1;
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
+        glutPostRedisplay();
         break;
     //incrementa limiar superior
     case 'r':
@@ -2077,9 +1699,9 @@ void keyboard(unsigned char key, int x, int y)
         printf("[ %d ; %d ]\n",limiar_inferior,limiar_superior);
         glutPostRedisplay();
         break;
-    //remove ruidos da imagem
-    case 'k':
-        remover_ruidos();
+    //executa algoritmo de detecção
+    case 'a':
+        executa_algoritmo();
         glutPostRedisplay();
         break;
     //calcula filtro de sobel
@@ -2087,70 +1709,49 @@ void keyboard(unsigned char key, int x, int y)
         sobel();
         glutPostRedisplay();
         break;
-    //destaca o que não é fundo da imagem
-    case 'l':
-        destaca_o_que_nao_e_fundo();
-        glutPostRedisplay();
-        break;
-    //sequencia de metodos para remover ruidos
-    case 'b':
-        run_1();
-        glutPostRedisplay();
-        break;
-    case 'h':
-        calcular_histograma_imagem_modificada();
-        glutPostRedisplay();
-        break;
-    case 'n':
-        minha_mediana();
-        glutPostRedisplay();
-        break;
-    case 't':
-        teste_deteccao();
-        glutPostRedisplay();
-        break;
-    case 'm':
-        run_2();
-        glutPostRedisplay();
-        break;
-    case 'p':
-        detectar_pinos();
-        glutPostRedisplay();
-        break;
+    //detecta as dentinas
     case 'd':
         detectar_dentina();
         glutPostRedisplay();
         break;
+    //detecta os pinos
+    case 'p':
+        detectar_pinos();
+        glutPostRedisplay();
+        break;
+    //remove ruidos da imagem
+    case 'k':
+        remover_ruidos();
+        glutPostRedisplay();
+        break;
+    //imprime pixels azuis
     case 'y':
         imprimir_pixels_azuis();
         glutPostRedisplay();
         break;
+    //imprime pixels verdes
     case 'u':
         imprimir_pixels_verdes();
         glutPostRedisplay();
         break;
+    //imprime pixels vermelhos
     case 'i':
         imprimir_pixels_vermelhos();
         glutPostRedisplay();
         break;
+    //imprime pixels pretos
     case 'o':
         imprimir_pixels_pretos();
         glutPostRedisplay();
         break;
-    case 'j':
-        detectar_dentinas_e_pinos();
-        glutPostRedisplay();
-        break;
-    case 'g':
-        detectar_fundo_preto_apos_detectar_dentinas(Image.SizeX()/2,Image.SizeY()/2);
-        glutPostRedisplay();
-        break;//pinta_pixels_pretos_de_vermelho();
-    case 'v':
-        pinta_pixels_pretos_de_vermelho();
-        glutPostRedisplay();
-        break;
+    //imprime pixels do fundo
     case 'f':
         imprimir_pixels_fundo();
+        glutPostRedisplay();
+        break;
+    //executa o trabalho o algoritmo para todas as imagens
+    case 't':
+        executar_trabalho();
         glutPostRedisplay();
         break;
     default:
