@@ -1,0 +1,297 @@
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 0
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 499465  2206    4964    136984
+CANAL   6099    17461   0       0
+PINOS   0       0       235464  1618
+FUNDO   10290   0       0       3084672
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 77.60   0.34    0.77    21.28
+CANAL   25.89   74.11   0.00    0.00
+PINOS   0.00    0.00    99.32   0.68
+FUNDO   0.33    0.00    0.00    99.67
+
+Total de pixels classificaveis: 3999223
+Total de pixels agrupado como dentina (verdes): 643619
+Total de pixels agrupado como canal (vermelhos): 23560
+Total de pixels agrupado como pinos (azuis): 237082
+Total de pixels agrupado como fundo (pretos): 3094962
+
+Total de verdadeiros positivos: 3837062 (95.95)
+Total de falsos positivos: 162161 (4.05)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 1
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 501079  5429    5552    132511
+CANAL   4207    19661   0       0
+PINOS   0       0       235626  1257
+FUNDO   9102    0       0       3084521
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 77.74   0.84    0.86    20.56
+CANAL   17.63   82.37   0.00    0.00
+PINOS   0.00    0.00    99.47   0.53
+FUNDO   0.29    0.00    0.00    99.71
+
+Total de pixels classificaveis: 3998945
+Total de pixels agrupado como dentina (verdes): 644571
+Total de pixels agrupado como canal (vermelhos): 23868
+Total de pixels agrupado como pinos (azuis): 236883
+Total de pixels agrupado como fundo (pretos): 3093623
+
+Total de verdadeiros positivos: 3840887 (96.05)
+Total de falsos positivos: 158058 (3.95)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 2
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 513506  4844    5632    121910
+CANAL   2858    21119   0       1
+PINOS   0       0       235502  1257
+FUNDO   14769   0       0       3078602
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 79.50   0.75    0.87    18.87
+CANAL   11.92   88.08   0.00    0.00
+PINOS   0.00    0.00    99.47   0.53
+FUNDO   0.48    0.00    0.00    99.52
+
+Total de pixels classificaveis: 4000000
+Total de pixels agrupado como dentina (verdes): 645892
+Total de pixels agrupado como canal (vermelhos): 23978
+Total de pixels agrupado como pinos (azuis): 236759
+Total de pixels agrupado como fundo (pretos): 3093371
+
+Total de verdadeiros positivos: 3848729 (96.22)
+Total de falsos positivos: 151271 (3.78)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 3
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 535433  5266    5119    128565
+CANAL   1750    22105   0       3
+PINOS   0       0       232291  1937
+FUNDO   10539   0       0       3056992
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 79.40   0.78    0.76    19.06
+CANAL   7.34    92.65   0.00    0.01
+PINOS   0.00    0.00    99.17   0.83
+FUNDO   0.34    0.00    0.00    99.66
+
+Total de pixels classificaveis: 4000000
+Total de pixels agrupado como dentina (verdes): 674383
+Total de pixels agrupado como canal (vermelhos): 23858
+Total de pixels agrupado como pinos (azuis): 234228
+Total de pixels agrupado como fundo (pretos): 3067531
+
+Total de verdadeiros positivos: 3846821 (96.17)
+Total de falsos positivos: 153179 (3.83)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 4
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 533781  2899    14820   120605
+CANAL   3251    20858   0       0
+PINOS   0       0       233513  617
+FUNDO   11450   62      0       3058144
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 79.42   0.43    2.21    17.94
+CANAL   13.48   86.52   0.00    0.00
+PINOS   0.00    0.00    99.74   0.26
+FUNDO   0.37    0.00    0.00    99.62
+
+Total de pixels classificaveis: 4000000
+Total de pixels agrupado como dentina (verdes): 672105
+Total de pixels agrupado como canal (vermelhos): 24109
+Total de pixels agrupado como pinos (azuis): 234130
+Total de pixels agrupado como fundo (pretos): 3069656
+
+Total de verdadeiros positivos: 3846296 (96.16)
+Total de falsos positivos: 153704 (3.84)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 5
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 535802  4698    582     185027
+CANAL   8379    35550   0       0
+PINOS   19      0       230547  3398
+FUNDO   8468    0       0       2987528
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 73.79   0.65    0.08    25.48
+CANAL   19.07   80.93   0.00    0.00
+PINOS   0.01    0.00    98.54   1.45
+FUNDO   0.28    0.00    0.00    99.72
+
+Total de pixels classificaveis: 3999998
+Total de pixels agrupado como dentina (verdes): 726109
+Total de pixels agrupado como canal (vermelhos): 43929
+Total de pixels agrupado como pinos (azuis): 233964
+Total de pixels agrupado como fundo (pretos): 2995996
+
+Total de verdadeiros positivos: 3789427 (94.74)
+Total de falsos positivos: 210571 (5.26)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 6
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 540513  4911    912     182315
+CANAL   7797    36361   0       0
+PINOS   0       0       231681  2102
+FUNDO   8398    0       0       2985008
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 74.18   0.67    0.13    25.02
+CANAL   17.66   82.34   0.00    0.00
+PINOS   0.00    0.00    99.10   0.90
+FUNDO   0.28    0.00    0.00    99.72
+
+Total de pixels classificaveis: 3999998
+Total de pixels agrupado como dentina (verdes): 728651
+Total de pixels agrupado como canal (vermelhos): 44158
+Total de pixels agrupado como pinos (azuis): 233783
+Total de pixels agrupado como fundo (pretos): 2993406
+
+Total de verdadeiros positivos: 3793563 (94.84)
+Total de falsos positivos: 206435 (5.16)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 7
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 543442  4868    856     178409
+CANAL   7864    35927   0       0
+PINOS   0       0       232611  1230
+FUNDO   8918    0       0       2985874
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 74.69   0.67    0.12    24.52
+CANAL   17.96   82.04   0.00    0.00
+PINOS   0.00    0.00    99.47   0.53
+FUNDO   0.30    0.00    0.00    99.70
+
+Total de pixels classificaveis: 3999999
+Total de pixels agrupado como dentina (verdes): 727575
+Total de pixels agrupado como canal (vermelhos): 43791
+Total de pixels agrupado como pinos (azuis): 233841
+Total de pixels agrupado como fundo (pretos): 2994792
+
+Total de verdadeiros positivos: 3797854 (94.95)
+Total de falsos positivos: 202145 (5.05)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 8
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 544301  3924    1926    174943
+CANAL   8076    36109   0       0
+PINOS   19      0       233299  527
+FUNDO   9816    0       0       2987059
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 75.07   0.54    0.27    24.13
+CANAL   18.28   81.72   0.00    0.00
+PINOS   0.01    0.00    99.77   0.23
+FUNDO   0.33    0.00    0.00    99.67
+
+Total de pixels classificaveis: 3999999
+Total de pixels agrupado como dentina (verdes): 725094
+Total de pixels agrupado como canal (vermelhos): 44185
+Total de pixels agrupado como pinos (azuis): 233845
+Total de pixels agrupado como fundo (pretos): 2996875
+
+Total de verdadeiros positivos: 3800768 (95.02)
+Total de falsos positivos: 199231 (4.98)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA DA IMAGEM: 9
+
+<<<FREQUENCIAS>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 543698  4960    432     171066
+CANAL   7115    37254   0       0
+PINOS   19      0       231847  2072
+FUNDO   8704    0       0       2992831
+
+<<<PORCENTAGEM>>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 75.50   0.69    0.06    23.75
+CANAL   16.04   83.96   0.00    0.00
+PINOS   0.01    0.00    99.11   0.89
+FUNDO   0.29    0.00    0.00    99.71
+
+Total de pixels classificaveis: 3999998
+Total de pixels agrupado como dentina (verdes): 720156
+Total de pixels agrupado como canal (vermelhos): 44369
+Total de pixels agrupado como pinos (azuis): 233938
+Total de pixels agrupado como fundo (pretos): 3001535
+
+Total de verdadeiros positivos: 3805630 (95.14)
+Total de falsos positivos: 194368 (4.86)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
+------------------------------------------------------------
+ESTATISTICA GLOBAL
+
+<<FREQUENCIAS>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 5291020 44005   40795   1532335
+CANAL   57396   282405  0       4
+PINOS   57      0       2332381 16015
+FUNDO   100454  62      0       30301231
+
+<<PORCENTAGEM>>
+        DENTINA CANAL   PINOS   FUNDO
+DENTINA 76.59   0.64    0.59    22.18
+CANAL   16.89   83.11   0.00    0.00
+PINOS   0.00    0.00    99.32   0.68
+FUNDO   0.33    0.00    0.00    99.67
+
+Total de pixels classificaveis: 39998160
+Total de pixels agrupado como dentina (verdes): 6908155
+Total de pixels agrupado como canal (vermelhos): 339805
+Total de pixels agrupado como pinos (azuis): 2348453
+Total de pixels agrupado como fundo (pretos): 30401747
+
+Total de verdadeiros positivos: 38207037 (95.52)
+Total de falsos positivos: 1791123 (4.48)
+Total de falsos negativos: 0 (0.00)
+------------------------------------------------------------
