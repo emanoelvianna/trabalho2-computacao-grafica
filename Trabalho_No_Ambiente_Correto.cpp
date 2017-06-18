@@ -57,6 +57,20 @@ typedef struct
     int quantidade_de_pixels_verdes;
     int quantidade_de_pixels_azuis;
     int quantidade_de_pixels_pretos;
+
+    int vermelhos_verdadeiros_positivos;
+    int vermelhos_falsos_positivos;
+    int vermelhos_falsos_negativos;
+    int verdes_verdadeiros_positivos;
+    int verdes_falsos_positivos;
+    int verdes_falsos_negativos;
+    int azuis_verdadeiros_positivos;
+    int azuis_falsos_positivos;
+    int azuis_falsos_negativos;
+    int pretos_verdadeiros_positivos;
+    int pretos_falsos_positivos;
+    int pretos_falsos_negativos;
+
     int verdadeiros_positivos;
     int falsos_positivos;
     int falsos_negativos;
@@ -198,6 +212,18 @@ void calcula_estatistica_global()
     estatistica_global.verdadeiros_positivos = 0;
     estatistica_global.falsos_positivos = 0;
     estatistica_global.falsos_negativos = 0;
+    estatistica_global.vermelhos_verdadeiros_positivos = 0;
+    estatistica_global.vermelhos_falsos_positivos = 0;
+    estatistica_global.vermelhos_falsos_negativos = 0;
+    estatistica_global.verdes_verdadeiros_positivos = 0;
+    estatistica_global.verdes_falsos_positivos = 0;
+    estatistica_global.verdes_falsos_negativos = 0;
+    estatistica_global.azuis_verdadeiros_positivos = 0;
+    estatistica_global.azuis_falsos_positivos = 0;
+    estatistica_global.azuis_falsos_negativos = 0;
+    estatistica_global.pretos_verdadeiros_positivos = 0;
+    estatistica_global.pretos_falsos_positivos = 0;
+    estatistica_global.pretos_falsos_negativos = 0;
 
     //computa dados estatísticos
     for(i=0; i<ESTRUTURAS_DE_ANALISE; i++)
@@ -230,12 +256,34 @@ void calcula_estatistica_global()
 
         estatistica_global.verdadeiros_positivos = estatistica_global.verdadeiros_positivos +
                 estatisticas[k].verdadeiros_positivos;
-
         estatistica_global.falsos_positivos =  estatistica_global.falsos_positivos +
                                                estatisticas[k].falsos_positivos;
-
         estatistica_global.falsos_negativos =  estatistica_global.falsos_negativos +
                                                estatisticas[k].falsos_negativos;
+        estatistica_global.vermelhos_verdadeiros_positivos = estatistica_global.vermelhos_verdadeiros_positivos +
+                estatisticas[k].vermelhos_verdadeiros_positivos;
+        estatistica_global.vermelhos_falsos_positivos = estatistica_global.vermelhos_falsos_positivos +
+                estatisticas[k].vermelhos_falsos_positivos;
+        estatistica_global.vermelhos_falsos_negativos = estatistica_global.vermelhos_falsos_negativos +
+                estatisticas[k].vermelhos_falsos_negativos;
+        estatistica_global.verdes_verdadeiros_positivos = estatistica_global.verdes_verdadeiros_positivos +
+                estatisticas[k].verdes_verdadeiros_positivos;
+        estatistica_global.verdes_falsos_positivos = estatistica_global.verdes_falsos_positivos +
+                estatisticas[k].verdes_falsos_positivos;
+        estatistica_global.verdes_falsos_negativos = estatistica_global.verdes_falsos_negativos +
+                estatisticas[k].verdes_falsos_negativos;
+        estatistica_global.azuis_verdadeiros_positivos = estatistica_global.azuis_verdadeiros_positivos +
+                estatisticas[k].azuis_verdadeiros_positivos;
+        estatistica_global.azuis_falsos_positivos = estatistica_global.azuis_falsos_positivos +
+                estatisticas[k].azuis_falsos_positivos;
+        estatistica_global.azuis_falsos_negativos = estatistica_global.azuis_falsos_negativos +
+                estatisticas[k].azuis_falsos_negativos;
+        estatistica_global.pretos_verdadeiros_positivos = estatistica_global.pretos_verdadeiros_positivos +
+                estatisticas[k].pretos_verdadeiros_positivos;
+        estatistica_global.pretos_falsos_positivos = estatistica_global.pretos_falsos_positivos +
+                estatisticas[k].pretos_falsos_positivos;
+        estatistica_global.pretos_falsos_negativos = estatistica_global.pretos_falsos_negativos +
+                estatisticas[k].pretos_falsos_negativos;
     }
 
     //imprime matriz de classificação
@@ -304,12 +352,23 @@ void calcula_estatistica_global()
     }
     printf("\n\n");
 
-    printf("Total de pixels classificaveis: %d\n",estatistica_global.quantidade_total_de_pixels);
-    printf("Total de pixels agrupado como dentina (verdes): %d\n",estatistica_global.quantidade_de_pixels_verdes);
-    printf("Total de pixels agrupado como canal (vermelhos): %d\n",estatistica_global.quantidade_de_pixels_vermelhos);
-    printf("Total de pixels agrupado como pinos (azuis): %d\n",estatistica_global.quantidade_de_pixels_azuis);
-    printf("Total de pixels agrupado como fundo (pretos): %d\n",estatistica_global.quantidade_de_pixels_pretos);
-
+    printf(">Total de pixels classificaveis: %d\n",estatistica_global.quantidade_total_de_pixels);
+    printf(">\n");
+    printf(">Total de pixels agrupados como dentina (verdes): %d\n",estatistica_global.quantidade_de_pixels_verdes);
+    printf(">VP:%d FP:%d FN:%d\n",estatistica_global.verdes_verdadeiros_positivos,
+           estatistica_global.verdes_falsos_positivos, estatistica_global.verdes_falsos_negativos);
+    printf(">\n");
+    printf(">Total de pixels agrupados como canal (vermelhos): %d\n",estatistica_global.quantidade_de_pixels_vermelhos);
+    printf(">VP:%d FP:%d FN:%d\n",estatistica_global.vermelhos_verdadeiros_positivos,
+           estatistica_global.vermelhos_falsos_positivos, estatistica_global.vermelhos_falsos_negativos);
+    printf(">\n");
+    printf(">Total de pixels agrupados como pinos (azuis): %d\n",estatistica_global.quantidade_de_pixels_azuis);
+    printf(">VP:%d FP:%d FN:%d\n",estatistica_global.azuis_verdadeiros_positivos,
+           estatistica_global.azuis_falsos_positivos, estatistica_global.azuis_falsos_negativos);
+    printf(">\n");
+    printf(">Total de pixels agrupados como fundo (pretos): %d\n",estatistica_global.quantidade_de_pixels_pretos);
+    printf(">VP:%d FP:%d FN:%d\n",estatistica_global.pretos_verdadeiros_positivos,
+           estatistica_global.pretos_falsos_positivos, estatistica_global.pretos_falsos_negativos);
     printf("\n");
 
     calc_aux = (float) estatistica_global.verdadeiros_positivos / estatistica_global.quantidade_total_de_pixels;
@@ -331,6 +390,18 @@ void calcula_estatistica()
     int verdadeiros_positivos_aux = 0;
     int falsos_positivos_aux = 0;
     int falsos_negativos_aux = 0;
+    int vermelhos_verdadeiros_positivos_aux = 0;
+    int vermelhos_falsos_positivos_aux = 0;
+    int vermelhos_falsos_negativos_aux = 0;
+    int verdes_verdadeiros_positivos_aux = 0;
+    int verdes_falsos_positivos_aux = 0;
+    int verdes_falsos_negativos_aux = 0;
+    int pretos_verdadeiros_positivos_aux = 0;
+    int pretos_falsos_positivos_aux = 0;
+    int pretos_falsos_negativos_aux = 0;
+    int azuis_verdadeiros_positivos_aux = 0;
+    int azuis_falsos_positivos_aux = 0;
+    int azuis_falsos_negativos_aux = 0;
     int vermelhos = 0;
     int verdes = 0;
     int pretos = 0;
@@ -347,6 +418,19 @@ void calcula_estatistica()
     estatisticas[numero_imagem].verdadeiros_positivos = 0;
     estatisticas[numero_imagem].falsos_positivos = 0;
     estatisticas[numero_imagem].falsos_negativos = 0;
+
+    estatisticas[numero_imagem].vermelhos_verdadeiros_positivos = 0;
+    estatisticas[numero_imagem].vermelhos_falsos_positivos = 0;
+    estatisticas[numero_imagem].vermelhos_falsos_negativos = 0;
+    estatisticas[numero_imagem].verdes_verdadeiros_positivos = 0;
+    estatisticas[numero_imagem].verdes_falsos_positivos = 0;
+    estatisticas[numero_imagem].verdes_falsos_negativos = 0;
+    estatisticas[numero_imagem].azuis_verdadeiros_positivos = 0;
+    estatisticas[numero_imagem].azuis_falsos_positivos = 0;
+    estatisticas[numero_imagem].azuis_falsos_negativos = 0;
+    estatisticas[numero_imagem].pretos_verdadeiros_positivos = 0;
+    estatisticas[numero_imagem].pretos_falsos_positivos = 0;
+    estatisticas[numero_imagem].pretos_falsos_negativos = 0;
 
     for(i=0; i<ESTRUTURAS_DE_ANALISE; i++)
     {
@@ -372,6 +456,7 @@ void calcula_estatistica()
                 if(r == 0 && g == 255 && b == 0)
                 {
                     verdadeiros_positivos_aux++;
+                    verdes_verdadeiros_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][DENTINA] =
                         estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][DENTINA] + 1;
                 }
@@ -379,6 +464,7 @@ void calcula_estatistica()
                 else if(r == 255 && g == 0 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    verdes_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][CANAL] =
                         estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][CANAL] + 1;
                 }
@@ -386,6 +472,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 255)
                 {
                     falsos_positivos_aux++;
+                    verdes_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][PINOS] =
                         estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][PINOS] + 1;
                 }
@@ -393,6 +480,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    verdes_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][FUNDO] =
                         estatisticas[numero_imagem].matriz_de_classificacao[DENTINA][FUNDO] + 1;
                 }
@@ -412,6 +500,7 @@ void calcula_estatistica()
                 if(r == 0 && g == 255 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    vermelhos_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[CANAL][DENTINA] =
                         estatisticas[numero_imagem].matriz_de_classificacao[CANAL][DENTINA] + 1;
                 }
@@ -419,6 +508,7 @@ void calcula_estatistica()
                 else if(r == 255 && g == 0 && b == 0)
                 {
                     verdadeiros_positivos_aux++;
+                    vermelhos_verdadeiros_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[CANAL][CANAL] =
                         estatisticas[numero_imagem].matriz_de_classificacao[CANAL][CANAL] + 1;
                 }
@@ -426,6 +516,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 255)
                 {
                     falsos_positivos_aux++;
+                    vermelhos_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[CANAL][PINOS] =
                         estatisticas[numero_imagem].matriz_de_classificacao[CANAL][PINOS] + 1;
                 }
@@ -433,6 +524,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    vermelhos_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[CANAL][FUNDO] =
                         estatisticas[numero_imagem].matriz_de_classificacao[CANAL][FUNDO] + 1;
                 }
@@ -452,6 +544,7 @@ void calcula_estatistica()
                 if(r == 0 && g == 255 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    azuis_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[PINOS][DENTINA] =
                         estatisticas[numero_imagem].matriz_de_classificacao[PINOS][DENTINA] + 1;
                 }
@@ -459,6 +552,7 @@ void calcula_estatistica()
                 else if(r == 255 && g == 0 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    azuis_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[PINOS][CANAL] =
                         estatisticas[numero_imagem].matriz_de_classificacao[PINOS][CANAL] + 1;
                 }
@@ -466,6 +560,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 255)
                 {
                     verdadeiros_positivos_aux++;
+                    azuis_verdadeiros_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[PINOS][PINOS] =
                         estatisticas[numero_imagem].matriz_de_classificacao[PINOS][PINOS] + 1;
                 }
@@ -473,6 +568,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    azuis_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[PINOS][FUNDO] =
                         estatisticas[numero_imagem].matriz_de_classificacao[PINOS][FUNDO] + 1;
                 }
@@ -492,6 +588,7 @@ void calcula_estatistica()
                 if(r == 0 && g == 255 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    pretos_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][DENTINA] =
                         estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][DENTINA] + 1;
                 }
@@ -499,6 +596,7 @@ void calcula_estatistica()
                 else if(r == 255 && g == 0 && b == 0)
                 {
                     falsos_positivos_aux++;
+                    pretos_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][CANAL] =
                         estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][CANAL] + 1;
                 }
@@ -506,6 +604,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 255)
                 {
                     falsos_positivos_aux++;
+                    pretos_falsos_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][PINOS] =
                         estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][PINOS] + 1;
                 }
@@ -513,6 +612,7 @@ void calcula_estatistica()
                 else if(r == 0 && g == 0 && b == 0)
                 {
                     verdadeiros_positivos_aux++;
+                    pretos_verdadeiros_positivos_aux++;
                     estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][FUNDO] =
                         estatisticas[numero_imagem].matriz_de_classificacao[FUNDO][FUNDO] + 1;
                 }
@@ -605,12 +705,32 @@ void calcula_estatistica()
     }
     printf("\n\n");
 
-    printf("Total de pixels classificaveis: %d\n",estatisticas[numero_imagem].quantidade_total_de_pixels);
-    printf("Total de pixels agrupado como dentina (verdes): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_verdes);
-    printf("Total de pixels agrupado como canal (vermelhos): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_vermelhos);
-    printf("Total de pixels agrupado como pinos (azuis): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_azuis);
-    printf("Total de pixels agrupado como fundo (pretos): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_pretos);
+    estatisticas[numero_imagem].vermelhos_verdadeiros_positivos = vermelhos_verdadeiros_positivos_aux;
+    estatisticas[numero_imagem].vermelhos_falsos_positivos = vermelhos_falsos_positivos_aux;
+    estatisticas[numero_imagem].vermelhos_falsos_negativos = vermelhos_falsos_negativos_aux;
+    estatisticas[numero_imagem].verdes_verdadeiros_positivos = verdes_verdadeiros_positivos_aux;
+    estatisticas[numero_imagem].verdes_falsos_positivos = verdes_falsos_positivos_aux;
+    estatisticas[numero_imagem].verdes_falsos_negativos = verdes_falsos_negativos_aux;
+    estatisticas[numero_imagem].azuis_verdadeiros_positivos = azuis_verdadeiros_positivos_aux;
+    estatisticas[numero_imagem].azuis_falsos_positivos = azuis_falsos_positivos_aux;
+    estatisticas[numero_imagem].azuis_falsos_negativos = azuis_falsos_negativos_aux;
+    estatisticas[numero_imagem].pretos_verdadeiros_positivos = pretos_verdadeiros_positivos_aux;
+    estatisticas[numero_imagem].pretos_falsos_positivos = pretos_falsos_positivos_aux;
+    estatisticas[numero_imagem].pretos_falsos_negativos = pretos_falsos_negativos_aux;
 
+    printf(">Total de pixels classificaveis: %d\n",estatisticas[numero_imagem].quantidade_total_de_pixels);
+    printf(">\n");
+    printf(">Total de pixels agrupados como dentina (verdes): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_verdes);
+    printf(">VP:%d FP:%d FN:%d\n",verdes_verdadeiros_positivos_aux,verdes_falsos_positivos_aux,verdes_falsos_negativos_aux);
+    printf(">\n");
+    printf(">Total de pixels agrupados como canal (vermelhos): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_vermelhos);
+    printf(">VP:%d FP:%d FN:%d\n",vermelhos_verdadeiros_positivos_aux,vermelhos_falsos_positivos_aux,vermelhos_falsos_negativos_aux);
+    printf(">\n");
+    printf(">Total de pixels agrupados como pinos (azuis): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_azuis);
+    printf(">VP:%d FP:%d FN:%d\n",azuis_verdadeiros_positivos_aux,azuis_falsos_positivos_aux,azuis_falsos_negativos_aux);
+    printf(">\n");
+    printf(">Total de pixels agrupados como fundo (pretos): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_pretos);
+    printf(">VP:%d FP:%d FN:%d\n",pretos_verdadeiros_positivos_aux,pretos_falsos_positivos_aux,pretos_falsos_negativos_aux);
     printf("\n");
 
     calc_aux = (float) estatisticas[numero_imagem].verdadeiros_positivos / estatisticas[numero_imagem].quantidade_total_de_pixels;
@@ -2301,6 +2421,19 @@ void init()
         estatisticas[i].verdadeiros_positivos = 0;
         estatisticas[i].falsos_positivos = 0;
         estatisticas[i].falsos_negativos = 0;
+
+        estatisticas[i].vermelhos_verdadeiros_positivos = 0;
+        estatisticas[i].vermelhos_falsos_positivos = 0;
+        estatisticas[i].vermelhos_falsos_negativos = 0;
+        estatisticas[i].verdes_verdadeiros_positivos = 0;
+        estatisticas[i].verdes_falsos_positivos = 0;
+        estatisticas[i].verdes_falsos_negativos = 0;
+        estatisticas[i].azuis_verdadeiros_positivos = 0;
+        estatisticas[i].azuis_falsos_positivos = 0;
+        estatisticas[i].azuis_falsos_negativos = 0;
+        estatisticas[i].pretos_verdadeiros_positivos = 0;
+        estatisticas[i].pretos_falsos_positivos = 0;
+        estatisticas[i].pretos_falsos_negativos = 0;
 
         int j,k;
 
