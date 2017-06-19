@@ -15,15 +15,23 @@ CANAL   25.89   74.11   0.00    0.00
 PINOS   0.00    0.00    99.32   0.68
 FUNDO   0.33    0.00    0.00    99.67
 
-Total de pixels classificaveis: 3999223
-Total de pixels agrupado como dentina (verdes): 643619
-Total de pixels agrupado como canal (vermelhos): 23560
-Total de pixels agrupado como pinos (azuis): 237082
-Total de pixels agrupado como fundo (pretos): 3094962
+>Total de pixels classificaveis: 3999223
+>
+>Total de pixels agrupados como dentina (verdes): 643619
+>VP:499465 FP:144154 FN:16389
+>
+>Total de pixels agrupados como canal (vermelhos): 23560
+>VP:17461 FP:6099 FN:2206
+>
+>Total de pixels agrupados como pinos (azuis): 237082
+>VP:235464 FP:1618 FN:4964
+>
+>Total de pixels agrupados como fundo (pretos): 3094962
+>VP:3084672 FP:10290 FN:138602
 
-Total de verdadeiros positivos: 3837062 (95.95)
-Total de falsos positivos: 162161 (4.05)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3837062 ( 95.95 pct )
+Total de falsos positivos: 162161 ( 4.05 pct )
+Total de falsos negativos: 162161 ( 4.05 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 1
@@ -42,15 +50,23 @@ CANAL   17.63   82.37   0.00    0.00
 PINOS   0.00    0.00    99.47   0.53
 FUNDO   0.29    0.00    0.00    99.71
 
-Total de pixels classificaveis: 3998945
-Total de pixels agrupado como dentina (verdes): 644571
-Total de pixels agrupado como canal (vermelhos): 23868
-Total de pixels agrupado como pinos (azuis): 236883
-Total de pixels agrupado como fundo (pretos): 3093623
+>Total de pixels classificaveis: 3998945
+>
+>Total de pixels agrupados como dentina (verdes): 644571
+>VP:501079 FP:143492 FN:13309
+>
+>Total de pixels agrupados como canal (vermelhos): 23868
+>VP:19661 FP:4207 FN:5429
+>
+>Total de pixels agrupados como pinos (azuis): 236883
+>VP:235626 FP:1257 FN:5552
+>
+>Total de pixels agrupados como fundo (pretos): 3093623
+>VP:3084521 FP:9102 FN:133768
 
-Total de verdadeiros positivos: 3840887 (96.05)
-Total de falsos positivos: 158058 (3.95)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3840887 ( 96.05 pct )
+Total de falsos positivos: 158058 ( 3.95 pct )
+Total de falsos negativos: 158058 ( 3.95 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 2
@@ -69,15 +85,23 @@ CANAL   11.92   88.08   0.00    0.00
 PINOS   0.00    0.00    99.47   0.53
 FUNDO   0.48    0.00    0.00    99.52
 
-Total de pixels classificaveis: 4000000
-Total de pixels agrupado como dentina (verdes): 645892
-Total de pixels agrupado como canal (vermelhos): 23978
-Total de pixels agrupado como pinos (azuis): 236759
-Total de pixels agrupado como fundo (pretos): 3093371
+>Total de pixels classificaveis: 4000000
+>
+>Total de pixels agrupados como dentina (verdes): 645892
+>VP:513506 FP:132386 FN:17627
+>
+>Total de pixels agrupados como canal (vermelhos): 23978
+>VP:21119 FP:2859 FN:4844
+>
+>Total de pixels agrupados como pinos (azuis): 236759
+>VP:235502 FP:1257 FN:5632
+>
+>Total de pixels agrupados como fundo (pretos): 3093371
+>VP:3078602 FP:14769 FN:123168
 
-Total de verdadeiros positivos: 3848729 (96.22)
-Total de falsos positivos: 151271 (3.78)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3848729 ( 96.22 pct )
+Total de falsos positivos: 151271 ( 3.78 pct )
+Total de falsos negativos: 151271 ( 3.78 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 3
@@ -96,15 +120,23 @@ CANAL   7.34    92.65   0.00    0.01
 PINOS   0.00    0.00    99.17   0.83
 FUNDO   0.34    0.00    0.00    99.66
 
-Total de pixels classificaveis: 4000000
-Total de pixels agrupado como dentina (verdes): 674383
-Total de pixels agrupado como canal (vermelhos): 23858
-Total de pixels agrupado como pinos (azuis): 234228
-Total de pixels agrupado como fundo (pretos): 3067531
+>Total de pixels classificaveis: 4000000
+>
+>Total de pixels agrupados como dentina (verdes): 674383
+>VP:535433 FP:138950 FN:12289
+>
+>Total de pixels agrupados como canal (vermelhos): 23858
+>VP:22105 FP:1753 FN:5266
+>
+>Total de pixels agrupados como pinos (azuis): 234228
+>VP:232291 FP:1937 FN:5119
+>
+>Total de pixels agrupados como fundo (pretos): 3067531
+>VP:3056992 FP:10539 FN:130505
 
-Total de verdadeiros positivos: 3846821 (96.17)
-Total de falsos positivos: 153179 (3.83)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3846821 ( 96.17 pct )
+Total de falsos positivos: 153179 ( 3.83 pct )
+Total de falsos negativos: 153179 ( 3.83 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 4
@@ -123,15 +155,23 @@ CANAL   13.48   86.52   0.00    0.00
 PINOS   0.00    0.00    99.74   0.26
 FUNDO   0.37    0.00    0.00    99.62
 
-Total de pixels classificaveis: 4000000
-Total de pixels agrupado como dentina (verdes): 672105
-Total de pixels agrupado como canal (vermelhos): 24109
-Total de pixels agrupado como pinos (azuis): 234130
-Total de pixels agrupado como fundo (pretos): 3069656
+>Total de pixels classificaveis: 4000000
+>
+>Total de pixels agrupados como dentina (verdes): 672105
+>VP:533781 FP:138324 FN:14701
+>
+>Total de pixels agrupados como canal (vermelhos): 24109
+>VP:20858 FP:3251 FN:2961
+>
+>Total de pixels agrupados como pinos (azuis): 234130
+>VP:233513 FP:617 FN:14820
+>
+>Total de pixels agrupados como fundo (pretos): 3069656
+>VP:3058144 FP:11512 FN:121222
 
-Total de verdadeiros positivos: 3846296 (96.16)
-Total de falsos positivos: 153704 (3.84)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3846296 ( 96.16 pct )
+Total de falsos positivos: 153704 ( 3.84 pct )
+Total de falsos negativos: 153704 ( 3.84 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 5
@@ -150,15 +190,23 @@ CANAL   19.07   80.93   0.00    0.00
 PINOS   0.01    0.00    98.54   1.45
 FUNDO   0.28    0.00    0.00    99.72
 
-Total de pixels classificaveis: 3999998
-Total de pixels agrupado como dentina (verdes): 726109
-Total de pixels agrupado como canal (vermelhos): 43929
-Total de pixels agrupado como pinos (azuis): 233964
-Total de pixels agrupado como fundo (pretos): 2995996
+>Total de pixels classificaveis: 3999998
+>
+>Total de pixels agrupados como dentina (verdes): 726109
+>VP:535802 FP:190307 FN:16866
+>
+>Total de pixels agrupados como canal (vermelhos): 43929
+>VP:35550 FP:8379 FN:4698
+>
+>Total de pixels agrupados como pinos (azuis): 233964
+>VP:230547 FP:3417 FN:582
+>
+>Total de pixels agrupados como fundo (pretos): 2995996
+>VP:2987528 FP:8468 FN:188425
 
-Total de verdadeiros positivos: 3789427 (94.74)
-Total de falsos positivos: 210571 (5.26)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3789427 ( 94.74 pct )
+Total de falsos positivos: 210571 ( 5.26 pct )
+Total de falsos negativos: 210571 ( 5.26 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 6
@@ -177,15 +225,23 @@ CANAL   17.66   82.34   0.00    0.00
 PINOS   0.00    0.00    99.10   0.90
 FUNDO   0.28    0.00    0.00    99.72
 
-Total de pixels classificaveis: 3999998
-Total de pixels agrupado como dentina (verdes): 728651
-Total de pixels agrupado como canal (vermelhos): 44158
-Total de pixels agrupado como pinos (azuis): 233783
-Total de pixels agrupado como fundo (pretos): 2993406
+>Total de pixels classificaveis: 3999998
+>
+>Total de pixels agrupados como dentina (verdes): 728651
+>VP:540513 FP:188138 FN:16195
+>
+>Total de pixels agrupados como canal (vermelhos): 44158
+>VP:36361 FP:7797 FN:4911
+>
+>Total de pixels agrupados como pinos (azuis): 233783
+>VP:231681 FP:2102 FN:912
+>
+>Total de pixels agrupados como fundo (pretos): 2993406
+>VP:2985008 FP:8398 FN:184417
 
-Total de verdadeiros positivos: 3793563 (94.84)
-Total de falsos positivos: 206435 (5.16)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3793563 ( 94.84 pct )
+Total de falsos positivos: 206435 ( 5.16 pct )
+Total de falsos negativos: 206435 ( 5.16 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 7
@@ -204,15 +260,23 @@ CANAL   17.96   82.04   0.00    0.00
 PINOS   0.00    0.00    99.47   0.53
 FUNDO   0.30    0.00    0.00    99.70
 
-Total de pixels classificaveis: 3999999
-Total de pixels agrupado como dentina (verdes): 727575
-Total de pixels agrupado como canal (vermelhos): 43791
-Total de pixels agrupado como pinos (azuis): 233841
-Total de pixels agrupado como fundo (pretos): 2994792
+>Total de pixels classificaveis: 3999999
+>
+>Total de pixels agrupados como dentina (verdes): 727575
+>VP:543442 FP:184133 FN:16782
+>
+>Total de pixels agrupados como canal (vermelhos): 43791
+>VP:35927 FP:7864 FN:4868
+>
+>Total de pixels agrupados como pinos (azuis): 233841
+>VP:232611 FP:1230 FN:856
+>
+>Total de pixels agrupados como fundo (pretos): 2994792
+>VP:2985874 FP:8918 FN:179639
 
-Total de verdadeiros positivos: 3797854 (94.95)
-Total de falsos positivos: 202145 (5.05)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3797854 ( 94.95 pct )
+Total de falsos positivos: 202145 ( 5.05 pct )
+Total de falsos negativos: 202145 ( 5.05 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 8
@@ -231,15 +295,23 @@ CANAL   18.28   81.72   0.00    0.00
 PINOS   0.01    0.00    99.77   0.23
 FUNDO   0.33    0.00    0.00    99.67
 
-Total de pixels classificaveis: 3999999
-Total de pixels agrupado como dentina (verdes): 725094
-Total de pixels agrupado como canal (vermelhos): 44185
-Total de pixels agrupado como pinos (azuis): 233845
-Total de pixels agrupado como fundo (pretos): 2996875
+>Total de pixels classificaveis: 3999999
+>
+>Total de pixels agrupados como dentina (verdes): 725094
+>VP:544301 FP:180793 FN:17911
+>
+>Total de pixels agrupados como canal (vermelhos): 44185
+>VP:36109 FP:8076 FN:3924
+>
+>Total de pixels agrupados como pinos (azuis): 233845
+>VP:233299 FP:546 FN:1926
+>
+>Total de pixels agrupados como fundo (pretos): 2996875
+>VP:2987059 FP:9816 FN:175470
 
-Total de verdadeiros positivos: 3800768 (95.02)
-Total de falsos positivos: 199231 (4.98)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3800768 ( 95.02 pct )
+Total de falsos positivos: 199231 ( 4.98 pct )
+Total de falsos negativos: 199231 ( 4.98 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA DA IMAGEM: 9
@@ -258,15 +330,23 @@ CANAL   16.04   83.96   0.00    0.00
 PINOS   0.01    0.00    99.11   0.89
 FUNDO   0.29    0.00    0.00    99.71
 
-Total de pixels classificaveis: 3999998
-Total de pixels agrupado como dentina (verdes): 720156
-Total de pixels agrupado como canal (vermelhos): 44369
-Total de pixels agrupado como pinos (azuis): 233938
-Total de pixels agrupado como fundo (pretos): 3001535
+>Total de pixels classificaveis: 3999998
+>
+>Total de pixels agrupados como dentina (verdes): 720156
+>VP:543698 FP:176458 FN:15838
+>
+>Total de pixels agrupados como canal (vermelhos): 44369
+>VP:37254 FP:7115 FN:4960
+>
+>Total de pixels agrupados como pinos (azuis): 233938
+>VP:231847 FP:2091 FN:432
+>
+>Total de pixels agrupados como fundo (pretos): 3001535
+>VP:2992831 FP:8704 FN:173138
 
-Total de verdadeiros positivos: 3805630 (95.14)
-Total de falsos positivos: 194368 (4.86)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 3805630 ( 95.14 pct )
+Total de falsos positivos: 194368 ( 4.86 pct )
+Total de falsos negativos: 194368 ( 4.86 pct )
 ------------------------------------------------------------
 ------------------------------------------------------------
 ESTATISTICA GLOBAL
@@ -285,13 +365,21 @@ CANAL   16.89   83.11   0.00    0.00
 PINOS   0.00    0.00    99.32   0.68
 FUNDO   0.33    0.00    0.00    99.67
 
-Total de pixels classificaveis: 39998160
-Total de pixels agrupado como dentina (verdes): 6908155
-Total de pixels agrupado como canal (vermelhos): 339805
-Total de pixels agrupado como pinos (azuis): 2348453
-Total de pixels agrupado como fundo (pretos): 30401747
+>Total de pixels classificaveis: 39998160
+>
+>Total de pixels agrupados como dentina (verdes): 6908155
+>VP:5291020 FP:1617135 FN:157907
+>
+>Total de pixels agrupados como canal (vermelhos): 339805
+>VP:282405 FP:57400 FN:44067
+>
+>Total de pixels agrupados como pinos (azuis): 2348453
+>VP:2332381 FP:16072 FN:40795
+>
+>Total de pixels agrupados como fundo (pretos): 30401747
+>VP:30301231 FP:100516 FN:1548354
 
-Total de verdadeiros positivos: 38207037 (95.52)
-Total de falsos positivos: 1791123 (4.48)
-Total de falsos negativos: 0 (0.00)
+Total de verdadeiros positivos: 38207037 ( 95.52 pct )
+Total de falsos positivos: 1791123 ( 4.48 pct )
+Total de falsos negativos: 1791123 ( 4.48 pct )
 ------------------------------------------------------------
