@@ -372,11 +372,11 @@ void calcula_estatistica_global()
     printf("\n");
 
     calc_aux = (float) estatistica_global.verdadeiros_positivos / estatistica_global.quantidade_total_de_pixels;
-    printf("Total de verdadeiros positivos: %d (%.2f)\n",estatistica_global.verdadeiros_positivos, calc_aux * 100.0);
+    printf("Total de verdadeiros positivos: %d ( %.2f pct )\n",estatistica_global.verdadeiros_positivos, calc_aux * 100.0);
     calc_aux = (float) estatistica_global.falsos_positivos / estatistica_global.quantidade_total_de_pixels;
-    printf("Total de falsos positivos: %d (%.2f)\n",estatistica_global.falsos_positivos, calc_aux * 100.0);
+    printf("Total de falsos positivos: %d ( %.2f pct )\n",estatistica_global.falsos_positivos, calc_aux * 100.0);
     calc_aux = (float) estatistica_global.falsos_negativos / estatistica_global.quantidade_total_de_pixels;
-    printf("Total de falsos negativos: %d (%.2f)\n",estatistica_global.falsos_negativos,calc_aux * 100.0);
+    printf("Total de falsos negativos: %d ( %.2f pct )\n",estatistica_global.falsos_negativos,calc_aux * 100.0);
 
     printf("------------------------------------------------------------\n\n");
 }
@@ -491,8 +491,15 @@ void calcula_estatistica()
                     //printf("r:%d g:%d b:%d\n",r,g,b);
                 }
             }
+            //o algoritmo disse que o pixel (x,y) não pertence ao grupo dentina, mas ele deveria pertencer
+            else if(r == 0 && g == 255 && b == 0)
+            {
+                falsos_negativos_aux++;
+                verdes_falsos_negativos_aux++;
+            }
+
             //se o pixel foi atribuído ao grupo canal
-            else if(pixels_vermelhos[x][y] == true)
+            if(pixels_vermelhos[x][y] == true)
             {
                 vermelhos++;
 
@@ -535,8 +542,15 @@ void calcula_estatistica()
                     //printf("r:%d g:%d b:%d\n",r,g,b);
                 }
             }
+            //o algoritmo disse que o pixel (x,y) não pertence ao grupo canal, mas ele deveria pertencer
+            else if(r == 255 && g == 0 && b == 0)
+            {
+                falsos_negativos_aux++;
+                vermelhos_falsos_negativos_aux++;
+            }
+
             //se o pixel foi atribuído ao grupo pinos
-            else if(pixels_azuis[x][y] == true)
+            if(pixels_azuis[x][y] == true)
             {
                 azuis++;
 
@@ -579,8 +593,15 @@ void calcula_estatistica()
                     //printf("r:%d g:%d b:%d\n",r,g,b);
                 }
             }
+            //o algoritmo disse que o pixel (x,y) não pertence ao grupo pinos, mas ele deveria pertencer
+            else if(r == 0 && g == 0 && b == 255)
+            {
+                falsos_negativos_aux++;
+                azuis_falsos_negativos_aux++;
+            }
+
             //se o pixel foi atribuído ao grupo fundo
-            else if(pixels_pretos[x][y] == true)
+            if(pixels_pretos[x][y] == true)
             {
                 pretos++;
 
@@ -622,6 +643,12 @@ void calcula_estatistica()
                     pretos--;
                     //printf("r:%d g:%d b:%d\n",r,g,b);
                 }
+            }
+            //o algoritmo disse que o pixel (x,y) não pertence ao grupo fundo, mas ele deveria pertencer
+            else if(r == 0 && g == 0 && b == 0)
+            {
+                falsos_negativos_aux++;
+                pretos_falsos_negativos_aux++;
             }
         }
     }
@@ -734,11 +761,11 @@ void calcula_estatistica()
     printf("\n");
 
     calc_aux = (float) estatisticas[numero_imagem].verdadeiros_positivos / estatisticas[numero_imagem].quantidade_total_de_pixels;
-    printf("Total de verdadeiros positivos: %d (%.2f)\n",estatisticas[numero_imagem].verdadeiros_positivos, calc_aux * 100.0);
+    printf("Total de verdadeiros positivos: %d ( %.2f pct )\n",estatisticas[numero_imagem].verdadeiros_positivos, calc_aux * 100.0);
     calc_aux = (float) estatisticas[numero_imagem].falsos_positivos / estatisticas[numero_imagem].quantidade_total_de_pixels;
-    printf("Total de falsos positivos: %d (%.2f)\n",estatisticas[numero_imagem].falsos_positivos, calc_aux * 100.0);
+    printf("Total de falsos positivos: %d ( %.2f pct )\n",estatisticas[numero_imagem].falsos_positivos, calc_aux * 100.0);
     calc_aux = (float) estatisticas[numero_imagem].falsos_negativos / estatisticas[numero_imagem].quantidade_total_de_pixels;
-    printf("Total de falsos negativos: %d (%.2f)\n",estatisticas[numero_imagem].falsos_negativos,calc_aux * 100.0);
+    printf("Total de falsos negativos: %d ( %.2f pct )\n",estatisticas[numero_imagem].falsos_negativos,calc_aux * 100.0);
 
     printf("------------------------------------------------------------\n\n");
 }
