@@ -58,6 +58,11 @@ typedef struct
     int quantidade_de_pixels_azuis;
     int quantidade_de_pixels_pretos;
 
+    int quantidade_de_pixels_vermelhos_ground_truth;
+    int quantidade_de_pixels_verdes_ground_truth;
+    int quantidade_de_pixels_azuis_ground_truth;
+    int quantidade_de_pixels_pretos_ground_truth;
+
     int vermelhos_verdadeiros_positivos;
     int vermelhos_falsos_positivos;
     int vermelhos_falsos_negativos;
@@ -209,6 +214,10 @@ void calcula_estatistica_global()
     estatistica_global.quantidade_de_pixels_verdes = 0;
     estatistica_global.quantidade_de_pixels_azuis = 0;
     estatistica_global.quantidade_de_pixels_pretos = 0;
+    estatistica_global.quantidade_de_pixels_vermelhos_ground_truth = 0;
+    estatistica_global.quantidade_de_pixels_verdes_ground_truth = 0;
+    estatistica_global.quantidade_de_pixels_azuis_ground_truth = 0;
+    estatistica_global.quantidade_de_pixels_pretos = 0;
     estatistica_global.verdadeiros_positivos = 0;
     estatistica_global.falsos_positivos = 0;
     estatistica_global.falsos_negativos = 0;
@@ -254,34 +263,60 @@ void calcula_estatistica_global()
         estatistica_global.quantidade_de_pixels_pretos = estatistica_global.quantidade_de_pixels_pretos +
                 estatisticas[k].quantidade_de_pixels_pretos;
 
+        estatistica_global.quantidade_de_pixels_vermelhos_ground_truth = estatistica_global.quantidade_de_pixels_vermelhos_ground_truth +
+                estatisticas[k].quantidade_de_pixels_vermelhos_ground_truth;
+
+        estatistica_global.quantidade_de_pixels_verdes_ground_truth = estatistica_global.quantidade_de_pixels_verdes_ground_truth +
+                estatisticas[k].quantidade_de_pixels_verdes_ground_truth;
+
+        estatistica_global.quantidade_de_pixels_azuis_ground_truth = estatistica_global.quantidade_de_pixels_azuis_ground_truth +
+                estatisticas[k].quantidade_de_pixels_azuis_ground_truth;
+
+        estatistica_global.quantidade_de_pixels_pretos_ground_truth = estatistica_global.quantidade_de_pixels_pretos_ground_truth +
+                estatisticas[k].quantidade_de_pixels_pretos_ground_truth;
+
         estatistica_global.verdadeiros_positivos = estatistica_global.verdadeiros_positivos +
                 estatisticas[k].verdadeiros_positivos;
+
         estatistica_global.falsos_positivos =  estatistica_global.falsos_positivos +
                                                estatisticas[k].falsos_positivos;
+
         estatistica_global.falsos_negativos =  estatistica_global.falsos_negativos +
                                                estatisticas[k].falsos_negativos;
+
         estatistica_global.vermelhos_verdadeiros_positivos = estatistica_global.vermelhos_verdadeiros_positivos +
                 estatisticas[k].vermelhos_verdadeiros_positivos;
+
         estatistica_global.vermelhos_falsos_positivos = estatistica_global.vermelhos_falsos_positivos +
                 estatisticas[k].vermelhos_falsos_positivos;
+
         estatistica_global.vermelhos_falsos_negativos = estatistica_global.vermelhos_falsos_negativos +
                 estatisticas[k].vermelhos_falsos_negativos;
+
         estatistica_global.verdes_verdadeiros_positivos = estatistica_global.verdes_verdadeiros_positivos +
                 estatisticas[k].verdes_verdadeiros_positivos;
+
         estatistica_global.verdes_falsos_positivos = estatistica_global.verdes_falsos_positivos +
                 estatisticas[k].verdes_falsos_positivos;
+
         estatistica_global.verdes_falsos_negativos = estatistica_global.verdes_falsos_negativos +
                 estatisticas[k].verdes_falsos_negativos;
+
         estatistica_global.azuis_verdadeiros_positivos = estatistica_global.azuis_verdadeiros_positivos +
                 estatisticas[k].azuis_verdadeiros_positivos;
+
         estatistica_global.azuis_falsos_positivos = estatistica_global.azuis_falsos_positivos +
                 estatisticas[k].azuis_falsos_positivos;
+
         estatistica_global.azuis_falsos_negativos = estatistica_global.azuis_falsos_negativos +
                 estatisticas[k].azuis_falsos_negativos;
+
         estatistica_global.pretos_verdadeiros_positivos = estatistica_global.pretos_verdadeiros_positivos +
                 estatisticas[k].pretos_verdadeiros_positivos;
+
         estatistica_global.pretos_falsos_positivos = estatistica_global.pretos_falsos_positivos +
                 estatisticas[k].pretos_falsos_positivos;
+
         estatistica_global.pretos_falsos_negativos = estatistica_global.pretos_falsos_negativos +
                 estatisticas[k].pretos_falsos_negativos;
     }
@@ -354,29 +389,33 @@ void calcula_estatistica_global()
 
     printf(">Total de pixels classificaveis: %d\n",estatistica_global.quantidade_total_de_pixels);
     printf(">\n");
-    printf(">Total de pixels agrupados como dentina (verdes): %d\n",estatistica_global.quantidade_de_pixels_verdes);
+    printf(">Total de pixels agrupados como dentina (imagem ground truth): %d\n",estatistica_global.quantidade_de_pixels_verdes_ground_truth);
+    printf(">Total de pixels agrupados como dentina (imagem processada): %d\n",estatistica_global.quantidade_de_pixels_verdes);
     printf(">VP:%d FP:%d FN:%d\n",estatistica_global.verdes_verdadeiros_positivos,
            estatistica_global.verdes_falsos_positivos, estatistica_global.verdes_falsos_negativos);
     printf(">\n");
-    printf(">Total de pixels agrupados como canal (vermelhos): %d\n",estatistica_global.quantidade_de_pixels_vermelhos);
+    printf(">Total de pixels agrupados como canal (imagem ground truth): %d\n",estatistica_global.quantidade_de_pixels_vermelhos_ground_truth);
+    printf(">Total de pixels agrupados como canal (imagem processada): %d\n",estatistica_global.quantidade_de_pixels_vermelhos);
     printf(">VP:%d FP:%d FN:%d\n",estatistica_global.vermelhos_verdadeiros_positivos,
            estatistica_global.vermelhos_falsos_positivos, estatistica_global.vermelhos_falsos_negativos);
     printf(">\n");
-    printf(">Total de pixels agrupados como pinos (azuis): %d\n",estatistica_global.quantidade_de_pixels_azuis);
+    printf(">Total de pixels agrupados como pinos (imagem ground truth): %d\n",estatistica_global.quantidade_de_pixels_azuis_ground_truth);
+    printf(">Total de pixels agrupados como pinos (imagem processada): %d\n",estatistica_global.quantidade_de_pixels_azuis);
     printf(">VP:%d FP:%d FN:%d\n",estatistica_global.azuis_verdadeiros_positivos,
            estatistica_global.azuis_falsos_positivos, estatistica_global.azuis_falsos_negativos);
     printf(">\n");
-    printf(">Total de pixels agrupados como fundo (pretos): %d\n",estatistica_global.quantidade_de_pixels_pretos);
+    printf(">Total de pixels agrupados como fundo (imagem ground truth): %d\n",estatistica_global.quantidade_de_pixels_pretos_ground_truth);
+    printf(">Total de pixels agrupados como fundo (imagem processada): %d\n",estatistica_global.quantidade_de_pixels_pretos);
     printf(">VP:%d FP:%d FN:%d\n",estatistica_global.pretos_verdadeiros_positivos,
            estatistica_global.pretos_falsos_positivos, estatistica_global.pretos_falsos_negativos);
     printf("\n");
 
     calc_aux = (float) estatistica_global.verdadeiros_positivos / estatistica_global.quantidade_total_de_pixels;
-    printf("Total de verdadeiros positivos: %d ( %.2f pct )\n",estatistica_global.verdadeiros_positivos, calc_aux * 100.0);
+    printf("Total de acertos: %d (%.2f pct)\n",estatistica_global.verdadeiros_positivos, calc_aux * 100.0);
     calc_aux = (float) estatistica_global.falsos_positivos / estatistica_global.quantidade_total_de_pixels;
-    printf("Total de falsos positivos: %d ( %.2f pct )\n",estatistica_global.falsos_positivos, calc_aux * 100.0);
-    calc_aux = (float) estatistica_global.falsos_negativos / estatistica_global.quantidade_total_de_pixels;
-    printf("Total de falsos negativos: %d ( %.2f pct )\n",estatistica_global.falsos_negativos,calc_aux * 100.0);
+    printf("Total de erros: %d (%.2f pct)\n",estatistica_global.falsos_positivos, calc_aux * 100.0);
+    //calc_aux = (float) estatistica_global.falsos_negativos / estatistica_global.quantidade_total_de_pixels;
+    //printf("Total de falsos negativos: %d ( %.2f pct )\n",estatistica_global.falsos_negativos,calc_aux * 100.0);
 
     printf("------------------------------------------------------------\n\n");
 }
@@ -406,6 +445,10 @@ void calcula_estatistica()
     int verdes = 0;
     int pretos = 0;
     int azuis = 0;
+    int vermelhos_ground_truth = 0;
+    int verdes_ground_truth = 0;
+    int pretos_ground_truth = 0;
+    int azuis_ground_truth = 0;
     unsigned char r,g,b;
     int x,y;
     int i,j;
@@ -446,6 +489,24 @@ void calcula_estatistica()
         for(y=0; y<Image.SizeY(); y++)
         {
             Image.ReadPixel(x,y,r,g,b);
+
+            //contabiliza quantidade pixels do ground truth
+            if(r==0 && g==0 && b==0)
+            {
+                pretos_ground_truth++;
+            }
+            else if(r==255 && g==0 && b==0)
+            {
+                vermelhos_ground_truth++;
+            }
+            else if(r==0 && g==255 && b==0)
+            {
+                verdes_ground_truth++;
+            }
+            else if(r==0 && g==0 && b==255)
+            {
+                azuis_ground_truth++;
+            }
 
             //se o pixel foi atribuído ao grupo dentina
             if(pixels_verdes[x][y] == true)
@@ -658,8 +719,12 @@ void calcula_estatistica()
     estatisticas[numero_imagem].quantidade_total_de_pixels = verdes + vermelhos + azuis + pretos;
 
     estatisticas[numero_imagem].quantidade_de_pixels_vermelhos = vermelhos;
+    estatisticas[numero_imagem].quantidade_de_pixels_vermelhos_ground_truth = vermelhos_ground_truth;
     estatisticas[numero_imagem].quantidade_de_pixels_verdes = verdes;
+    estatisticas[numero_imagem].quantidade_de_pixels_verdes_ground_truth = verdes_ground_truth;
     estatisticas[numero_imagem].quantidade_de_pixels_azuis = azuis;
+    estatisticas[numero_imagem].quantidade_de_pixels_azuis_ground_truth = azuis_ground_truth;
+    estatisticas[numero_imagem].quantidade_de_pixels_pretos_ground_truth = pretos_ground_truth;
     estatisticas[numero_imagem].quantidade_de_pixels_pretos = pretos;
 
     estatisticas[numero_imagem].verdadeiros_positivos = verdadeiros_positivos_aux;
@@ -747,25 +812,29 @@ void calcula_estatistica()
 
     printf(">Total de pixels classificaveis: %d\n",estatisticas[numero_imagem].quantidade_total_de_pixels);
     printf(">\n");
-    printf(">Total de pixels agrupados como dentina (verdes): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_verdes);
+    printf(">Total de pixels agrupados como dentina (imagem ground truth): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_verdes_ground_truth);
+    printf(">Total de pixels agrupados como dentina (imagem processada): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_verdes);
     printf(">VP:%d FP:%d FN:%d\n",verdes_verdadeiros_positivos_aux,verdes_falsos_positivos_aux,verdes_falsos_negativos_aux);
     printf(">\n");
-    printf(">Total de pixels agrupados como canal (vermelhos): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_vermelhos);
+    printf(">Total de pixels agrupados como canal (imagem ground truth): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_vermelhos_ground_truth);
+    printf(">Total de pixels agrupados como canal (imagem processada): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_vermelhos);
     printf(">VP:%d FP:%d FN:%d\n",vermelhos_verdadeiros_positivos_aux,vermelhos_falsos_positivos_aux,vermelhos_falsos_negativos_aux);
     printf(">\n");
-    printf(">Total de pixels agrupados como pinos (azuis): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_azuis);
+    printf(">Total de pixels agrupados como pinos (imagem ground truth): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_azuis_ground_truth);
+    printf(">Total de pixels agrupados como pinos (imagem processada): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_azuis);
     printf(">VP:%d FP:%d FN:%d\n",azuis_verdadeiros_positivos_aux,azuis_falsos_positivos_aux,azuis_falsos_negativos_aux);
     printf(">\n");
-    printf(">Total de pixels agrupados como fundo (pretos): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_pretos);
+    printf(">Total de pixels agrupados como fundo (imagem ground truth): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_pretos_ground_truth);
+    printf(">Total de pixels agrupados como fundo (imagem processada): %d\n",estatisticas[numero_imagem].quantidade_de_pixels_pretos);
     printf(">VP:%d FP:%d FN:%d\n",pretos_verdadeiros_positivos_aux,pretos_falsos_positivos_aux,pretos_falsos_negativos_aux);
     printf("\n");
 
     calc_aux = (float) estatisticas[numero_imagem].verdadeiros_positivos / estatisticas[numero_imagem].quantidade_total_de_pixels;
-    printf("Total de verdadeiros positivos: %d ( %.2f pct )\n",estatisticas[numero_imagem].verdadeiros_positivos, calc_aux * 100.0);
+    printf("Total de acertos: %d (%.2f pct)\n",estatisticas[numero_imagem].verdadeiros_positivos, calc_aux * 100.0);
     calc_aux = (float) estatisticas[numero_imagem].falsos_positivos / estatisticas[numero_imagem].quantidade_total_de_pixels;
-    printf("Total de falsos positivos: %d ( %.2f pct )\n",estatisticas[numero_imagem].falsos_positivos, calc_aux * 100.0);
-    calc_aux = (float) estatisticas[numero_imagem].falsos_negativos / estatisticas[numero_imagem].quantidade_total_de_pixels;
-    printf("Total de falsos negativos: %d ( %.2f pct )\n",estatisticas[numero_imagem].falsos_negativos,calc_aux * 100.0);
+    printf("Total de erros: %d (%.2f pct)\n",estatisticas[numero_imagem].falsos_positivos, calc_aux * 100.0);
+    //calc_aux = (float) estatisticas[numero_imagem].falsos_negativos / estatisticas[numero_imagem].quantidade_total_de_pixels;
+    //printf("Total de falsos negativos: %d ( %.2f pct )\n",estatisticas[numero_imagem].falsos_negativos,calc_aux * 100.0);
 
     printf("------------------------------------------------------------\n\n");
 }
