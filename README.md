@@ -4,6 +4,5 @@
 
 ### Resultados alcançados:
 
-![GitHub Logo](resultado1.png)
-![GitHub Logo](resultado2.png)
-![GitHub Logo](resultado3.png)
+![GitHub Logo](Resultados/resultado1.png)
+![GitHub Logo](Resultados/resultado2.png)
